@@ -35,10 +35,10 @@ var nh ns.NoteHandler
 
 func main() {
 
-	// cookie1 := js.Global().Get("document").Get("username").String()
-	// fmt.Println("cookie1: ", cookie1)
+	//email := js.Global().Get("document").Get("email").String()
+	//fmt.Println("email: ", email)
 	// if cookie1 != "ben" {
-	js.Global().Get("document").Set("username", "ben")
+	//js.Global().Get("document").Set("email", "ben")
 	// }
 
 	// mailHost := os.Getenv("EMAIL_HOST")
@@ -57,7 +57,7 @@ func main() {
 	napi.SetLogger(&l)
 	//napi.SetLogLevel(lg.AllLevel)
 
-	// h := nh.GetNew()
+	h := nh.GetNew()
 
 	// noteList := api.GetUsersNotes("tester@tester.com")
 	// noteList := nh.API.GetUsersNotes("tester@tester.com")
@@ -70,8 +70,15 @@ func main() {
 	document.Get("body").Call("appendChild", p)
 	document.Call("getElementById", "name").Set("value", "ken")
 
+	//hello := js.Global().Get("sayHello")
+	//hello.Invoke()
+
+	//something := js.Global().Get("saySomething")
+	//something.Invoke("How you doing?")
+
 	// js.Global().Set("getNotes", js.FuncOf(getNoteList))
-	js.Global().Set("getNotes", js.FuncOf(getNoteList))
+	js.Global().Set("getNotes", js.FuncOf(h.GetNoteList))
+	js.Global().Set("login", js.FuncOf(h.Login))
 	//func Clone() js.Func {
 	// cb = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 	// 	noteList := nh.API.GetUsersNotes("tester@tester.com")
@@ -85,6 +92,17 @@ func main() {
 
 	// js.Global().Set("getNotes", MyGoFunc)
 
+	go func() {
+		emailFn := js.Global().Get("getUserEmail")
+		cemail := emailFn.Invoke()
+		fmt.Println("email: ", cemail)
+		if cemail.String() == "" {
+			fmt.Println("email: ", cemail)
+			document := js.Global().Get("document")
+			document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "block")
+		}
+	}()
+
 	wg.Wait()
 	//cookies := js.Global().Get("document").Get("cookie").String()
 }
@@ -95,8 +113,8 @@ func getNoteList(this js.Value, args []js.Value) interface{} {
 		fmt.Println(*noteList)
 		document := js.Global().Get("document")
 		document.Call("getElementById", "job").Set("value", (*noteList)[0].Title)
-		cookie1 := js.Global().Get("document").Get("username").String()
-		fmt.Println(cookie1)
+		email := js.Global().Get("document").Get("email").String()
+		fmt.Println(email)
 	}()
 	return js.Null()
 }
