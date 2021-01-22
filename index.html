@@ -1,0 +1,52 @@
+<html>
+
+<head>
+	<meta charset="utf-8" />
+
+	<script type='text/javascript' src="/libs/js/popper.js"></script>
+	<script type='text/javascript' src="/libs/js/jquery-3.5.1.min.js"></script>
+	<script type='text/javascript' src="/libs/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" href="/libs/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/libs/css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="/libs/css/bootstrap-reboot.min.css">
+
+	<script src="wasm_exec.js"></script>
+	<script>
+		const go = new Go();
+		WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+			go.run(result.instance);
+		});
+	</script>
+</head>
+
+<body>
+
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="">Cocka2Notes</a>
+
+		<ul class="nav">
+
+			<li class="nav-item">
+				<a href="#" class="nav-link" style="color: ghostwhite;" onclick="getNotes()" role="button">Note List</a>
+			</li>
+
+			<li class="nav-item">
+				<a href="#" class="nav-link" style="color: ghostwhite;" onclick="getNotes()">New Note</a>
+			</li>
+
+			<li class="nav-item">
+				<a href="#" class="nav-link" style="color: ghostwhite;" onclick="getNotes()">Login</a>
+			</li>
+
+		</ul>
+
+	</nav>
+
+	<input type="text" id="name" />
+	<input type="text" id="job" />
+	<button onclick="getNotes()" type="button">Click Me!</button>
+</body>
+
+</html>
