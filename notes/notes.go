@@ -54,8 +54,17 @@ func (n *NoteHandler) Login(this js.Value, args []js.Value) interface{} {
 		fmt.Println(email)
 		pw := document.Call("getElementById", "password").Get("value").String()
 		fmt.Println(pw)
-		// user := n.API.GetUser(newu.Text)
-		// fmt.Println(user)
+		var u api.User
+		u.Email = email
+		u.Password = pw
+		suc := n.API.Login(&u)
+		fmt.Println("login suc: ", *suc)
+		if suc.Success {
+			emailc := js.Global().Get("setUserEmail")
+			emailc.Invoke(email)
+			n.Email = email
+			//go to note list
+		}
 
 		// document.Call("getElementById", "job").Set("value", (*noteList)[0].Title)
 		//email := js.Global().Get("document").Get("email").String()

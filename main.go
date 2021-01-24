@@ -77,8 +77,10 @@ func main() {
 	//something.Invoke("How you doing?")
 
 	// js.Global().Set("getNotes", js.FuncOf(getNoteList))
+
 	js.Global().Set("getNotes", js.FuncOf(h.GetNoteList))
 	js.Global().Set("login", js.FuncOf(h.Login))
+
 	//func Clone() js.Func {
 	// cb = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 	// 	noteList := nh.API.GetUsersNotes("tester@tester.com")
@@ -101,22 +103,23 @@ func main() {
 			document := js.Global().Get("document")
 			document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "block")
 		}
+		//else  go go note list
 	}()
 
 	wg.Wait()
 	//cookies := js.Global().Get("document").Get("cookie").String()
 }
 
-func getNoteList(this js.Value, args []js.Value) interface{} {
-	go func() {
-		noteList := nh.API.GetUsersNotes("tester@tester.com")
-		fmt.Println(*noteList)
-		document := js.Global().Get("document")
-		document.Call("getElementById", "job").Set("value", (*noteList)[0].Title)
-		email := js.Global().Get("document").Get("email").String()
-		fmt.Println(email)
-	}()
-	return js.Null()
-}
+// func getNoteList(this js.Value, args []js.Value) interface{} {
+// 	go func() {
+// 		noteList := nh.API.GetUsersNotes("tester@tester.com")
+// 		fmt.Println(*noteList)
+// 		document := js.Global().Get("document")
+// 		document.Call("getElementById", "job").Set("value", (*noteList)[0].Title)
+// 		email := js.Global().Get("document").Get("email").String()
+// 		fmt.Println(email)
+// 	}()
+// 	return js.Null()
+// }
 
 // go mod init github.com/Ulbora/cocka2notesWA

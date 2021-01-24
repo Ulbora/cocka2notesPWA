@@ -4,3 +4,5 @@ github.com/Ulbora/Level_Logger v1.0.2 h1:uhuNi1oSQ1zSDhuYQS7NEHqtR4lAYPGyW2XGwJZ
 github.com/Ulbora/Level_Logger v1.0.2/go.mod h1:epRidhkOBJSzCCon816WfFCO9vtai8VCmdI8S/xcTbA=
 github.com/Ulbora/cocka2notesApi v1.0.2 h1:7VVoXwiEfXWn7WEQ7vMg3VULmGnrssrZkePA+eySksY=
 github.com/Ulbora/cocka2notesApi v1.0.2/go.mod h1:Z0h/smsw15WxtgItoyotnx1qfNRU/CvI0wzm6qK+eTI=
+github.com/Ulbora/cocka2notesApi v1.0.3 h1:JYJwuyfyCBJN4c79eMZHDFDo6YiQFnGzRaqSef+z3TM=
+github.com/Ulbora/cocka2notesApi v1.0.3/go.mod h1:Z0h/smsw15WxtgItoyotnx1qfNRU/CvI0wzm6qK+eTI=
