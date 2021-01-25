@@ -46,25 +46,48 @@
 	</nav>
 
 	<div id="loginScreen" class="container-sm" style="display: none;">
-        <div class="shadow-none p-3 mb-5 mt-5 bg-secondary rounded">
-            <h1>Login</h1>
-            <!-- <form>                 -->
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input name="email" type="text" class="form-control" id="email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input name="password" type="password" class="form-control" id="password">
-                </div>
-                <button onclick="login()" class="btn btn-primary">Submit</button>
-            <!-- </form> -->
-        </div>
-    </div>
+		<div class="shadow-none p-3 mb-5 mt-5 bg-secondary rounded">
+			<h1>Login</h1>
+			<!-- <form>                 -->
+			<div class="form-group">
+				<label for="email">Email</label>
+				<input name="email" type="text" class="form-control" id="email">
+			</div>
+			<div class="form-group">
+				<label for="password">Password</label>
+				<input name="password" type="password" class="form-control" id="password">
+			</div>
+			<button onclick="login()" class="btn btn-primary">Submit</button>
+			<!-- </form> -->
+		</div>
+	</div>
 
-	<input type="text" id="name" />
-	<input type="text" id="job" />
-	<button onclick="getNotes()" type="button">Click Me!</button>
+	<div id="noteList" class="container-sm" style="display: none;">
+		<table class="table table-hover mt-3">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Note Title</th>
+					<th scope="col">Last Updated</th>
+				</tr>
+			</thead>
+			<tbody id="noteListBody">
+
+			</tbody>
+		</table>
+	</div>
+
+	<div id="checkboxNote" class="container-sm" style="display: none;">
+		<div class="form-group mt-3">
+			<label for="email"><b>Title</b></label>
+			<input name="title" type="text" class="form-control" id="checkboxTitle">
+		</div>
+		<div id="checkboxes">
+
+		</div>
+	</div>
+
+
 </body>
 
 </html>

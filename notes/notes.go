@@ -4,6 +4,7 @@ import (
 	"fmt"
 	lg "github.com/Ulbora/Level_Logger"
 	api "github.com/Ulbora/cocka2notesApi"
+	"strconv"
 	"syscall/js"
 )
 
@@ -11,6 +12,8 @@ import (
 type Handler interface {
 	Login(this js.Value, args []js.Value) interface{}
 	GetNoteList(this js.Value, args []js.Value) interface{}
+	GetNote(this js.Value, args []js.Value) interface{}
+	UpdateCheckboxNoteItem(this js.Value, args []js.Value) interface{}
 }
 
 //NoteHandler NoteHandler
@@ -35,14 +38,15 @@ func (n *NoteHandler) GetNoteList(this js.Value, args []js.Value) interface{} {
 	// document := js.Global().Get("document")
 	// document.Call("getElementById", "job").Set("value", "Engineer of Notes to go")
 	// return js.Null()
-	go func() {
-		noteList := n.API.GetUsersNotes("tester@tester.com")
-		fmt.Println(*noteList)
-		document := js.Global().Get("document")
-		document.Call("getElementById", "job").Set("value", (*noteList)[0].Title)
-		//email := js.Global().Get("document").Get("email").String()
-		//fmt.Println(email)
-	}()
+	// go func() {
+	// 	noteList := n.API.GetUsersNotes("tester@tester.com")
+	// 	fmt.Println(*noteList)
+	// 	// document := js.Global().Get("document")
+	// 	// document.Call("getElementById", "job").Set("value", (*noteList)[0].Title)
+	// 	//email := js.Global().Get("document").Get("email").String()
+	// 	//fmt.Println(email)
+	// }()
+	n.PopulateNoteList(n.Email)
 	return js.Null()
 }
 
@@ -57,13 +61,27 @@ func (n *NoteHandler) Login(this js.Value, args []js.Value) interface{} {
 		var u api.User
 		u.Email = email
 		u.Password = pw
-		suc := n.API.Login(&u)
-		fmt.Println("login suc: ", *suc)
-		if suc.Success {
+		res := n.API.Login(&u)
+		fmt.Println("login suc: ", *res)
+		if res.Success {
 			emailc := js.Global().Get("setUserEmail")
 			emailc.Invoke(email)
 			n.Email = email
+			document := js.Global().Get("document")
+			document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
 			//go to note list
+			n.PopulateNoteList(email)
+		} else if res.Email == "" {
+			// auto create a new account
+			suc := n.API.AddUser(&u)
+			if suc.Success {
+				emailc := js.Global().Get("setUserEmail")
+				emailc.Invoke(email)
+				document := js.Global().Get("document")
+				document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
+				// gto to note list
+				n.PopulateNoteList(email)
+			}
 		}
 
 		// document.Call("getElementById", "job").Set("value", (*noteList)[0].Title)
@@ -71,4 +89,35 @@ func (n *NoteHandler) Login(this js.Value, args []js.Value) interface{} {
 		//fmt.Println(email)
 	}()
 	return js.Null()
+}
+
+//PopulateNoteList PopulateNoteList
+func (n *NoteHandler) PopulateNoteList(email string) {
+	go func() {
+		noteList := n.API.GetUsersNotes(email)
+		fmt.Println("Note list in PopulateNoteList", *noteList)
+		document := js.Global().Get("document")
+		document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "block")
+		document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "none")
+		//document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "block")
+		var rowHTML = ""
+		for i, nt := range *noteList {
+			var row = i + 1
+			fmt.Println("note: ", nt)
+			var rowStr = strconv.Itoa(row)
+			var idStr = strconv.FormatInt(nt.ID, 10)
+			var rowTime = nt.LastUsed.Format("2006-01-02 15:04:05")
+			rowHTML = rowHTML + "<tr class='clickable-row' onclick='showNote(" + idStr + ",\"" + nt.Type + "\")'>"
+			rowHTML = rowHTML + "<th scope='row'>" + rowStr + "</th>"
+			rowHTML = rowHTML + "<td>" + nt.Title + "</td>"
+			rowHTML = rowHTML + "<td>" + rowTime + "</td>"
+			rowHTML = rowHTML + "</tr>"
+
+		}
+		fmt.Println("rowHTML: ", rowHTML)
+		document.Call("getElementById", "noteListBody").Set("innerHTML", rowHTML)
+		// document.Call("getElementById", "job").Set("value", (*noteList)[0].Title)
+		//email := js.Global().Get("document").Get("email").String()
+		//fmt.Println(email)
+	}()
 }

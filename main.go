@@ -64,11 +64,11 @@ func main() {
 	fmt.Println("nh.API", nh.API)
 	fmt.Println("Hello, WebAssembly, how you doing!")
 	// fmt.Println(*noteList)
-	document := js.Global().Get("document")
-	p := document.Call("createElement", "p")
-	p.Set("innerHTML", "Hello WASM from Go!")
-	document.Get("body").Call("appendChild", p)
-	document.Call("getElementById", "name").Set("value", "ken")
+	// document := js.Global().Get("document")
+	// p := document.Call("createElement", "p")
+	// p.Set("innerHTML", "Hello WASM from Go!")
+	// document.Get("body").Call("appendChild", p)
+	// document.Call("getElementById", "name").Set("value", "ken")
 
 	//hello := js.Global().Get("sayHello")
 	//hello.Invoke()
@@ -79,6 +79,8 @@ func main() {
 	// js.Global().Set("getNotes", js.FuncOf(getNoteList))
 
 	js.Global().Set("getNotes", js.FuncOf(h.GetNoteList))
+	js.Global().Set("showNote", js.FuncOf(h.GetNote))
+	js.Global().Set("updateCheckItem", js.FuncOf(h.UpdateCheckboxNoteItem))
 	js.Global().Set("login", js.FuncOf(h.Login))
 
 	//func Clone() js.Func {
@@ -102,6 +104,8 @@ func main() {
 			fmt.Println("email: ", cemail)
 			document := js.Global().Get("document")
 			document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "block")
+		} else {
+			nh.PopulateNoteList(cemail.String())
 		}
 		//else  go go note list
 	}()
