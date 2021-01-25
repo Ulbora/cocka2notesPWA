@@ -29,7 +29,9 @@ func (n *NoteHandler) GetNote(this js.Value, args []js.Value) interface{} {
 			document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "none")
 			document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "block")
 			document.Call("getElementById", "checkboxTitle").Set("value", note.Title)
+			document.Call("getElementById", "noteId").Set("value", idInt)
 			var rowHTML = ""
+			var niddStr = strconv.FormatInt(id, 10)
 			for _, nt := range note.NoteItems {
 				fmt.Println("checkbox", nt)
 				var idStr = strconv.FormatInt(nt.ID, 10)
@@ -39,12 +41,24 @@ func (n *NoteHandler) GetNote(this js.Value, args []js.Value) interface{} {
 				if nt.Checked {
 					ched = "checked"
 				}
-				rowHTML = rowHTML + "<div class='form-group form-check'>"
+				rowHTML = rowHTML + "<div class='form-row'>"
+				rowHTML = rowHTML + "<div class='form-group form-row-l'>"
+				rowHTML = rowHTML + "<div class='form-check'>"
 				rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
-				rowHTML = rowHTML + "<input type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
+				rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
+				rowHTML = rowHTML + "</div>"
+				rowHTML = rowHTML + "</div>"
+				rowHTML = rowHTML + "<div class='form-group form-row-r'>"
+				rowHTML = rowHTML + "<button onclick='deleteCheckItem(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
+				rowHTML = rowHTML + "</div>"
 				rowHTML = rowHTML + "</div>"
 
 			}
+			rowHTML = rowHTML + "<div class='form-group form-check'>"
+			rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
+			rowHTML = rowHTML + "<input id='newtxt' onchange='addCheckItem(" + niddStr + ")' type='text' class='form-control'>"
+			rowHTML = rowHTML + "</div>"
+
 			fmt.Println("rowHTML: ", rowHTML)
 			document.Call("getElementById", "checkboxes").Set("innerHTML", rowHTML)
 		}

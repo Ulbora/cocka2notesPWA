@@ -80,7 +80,10 @@ func main() {
 
 	js.Global().Set("getNotes", js.FuncOf(h.GetNoteList))
 	js.Global().Set("showNote", js.FuncOf(h.GetNote))
+	js.Global().Set("updateCheckTitle", js.FuncOf(h.UpdateCheckboxNoteTitle))
 	js.Global().Set("updateCheckItem", js.FuncOf(h.UpdateCheckboxNoteItem))
+	js.Global().Set("addCheckItem", js.FuncOf(h.AddCheckboxNoteItem))
+	js.Global().Set("deleteCheckItem", js.FuncOf(h.DeleteCheckboxNoteItem))
 	js.Global().Set("login", js.FuncOf(h.Login))
 
 	//func Clone() js.Func {
@@ -105,6 +108,7 @@ func main() {
 			document := js.Global().Get("document")
 			document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "block")
 		} else {
+			nh.Email = cemail.String()
 			nh.PopulateNoteList(cemail.String())
 		}
 		//else  go go note list

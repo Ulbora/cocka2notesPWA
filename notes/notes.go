@@ -13,7 +13,10 @@ type Handler interface {
 	Login(this js.Value, args []js.Value) interface{}
 	GetNoteList(this js.Value, args []js.Value) interface{}
 	GetNote(this js.Value, args []js.Value) interface{}
+	UpdateCheckboxNoteTitle(this js.Value, args []js.Value) interface{}
 	UpdateCheckboxNoteItem(this js.Value, args []js.Value) interface{}
+	AddCheckboxNoteItem(this js.Value, args []js.Value) interface{}
+	DeleteCheckboxNoteItem(this js.Value, args []js.Value) interface{}
 }
 
 //NoteHandler NoteHandler
