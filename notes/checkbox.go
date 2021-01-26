@@ -92,7 +92,7 @@ func (n *NoteHandler) UpdateCheckboxNoteItem(this js.Value, args []js.Value) int
 		}
 
 		rowHTML = rowHTML + "<div class='form-group form-check'>"
-		rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
+		//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
 		rowHTML = rowHTML + "<input id='newtxt' onchange='addCheckItem(" + niddStr + ")' type='text' class='form-control'>"
 		rowHTML = rowHTML + "</div>"
 		fmt.Println("rowHTML: ", rowHTML)
@@ -154,7 +154,7 @@ func (n *NoteHandler) AddCheckboxNoteItem(this js.Value, args []js.Value) interf
 
 		}
 		rowHTML = rowHTML + "<div class='form-group form-check'>"
-		rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
+		//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
 		rowHTML = rowHTML + "<input id='newtxt' onchange='addCheckItem(" + niddStr + ")' type='text' class='form-control'>"
 		rowHTML = rowHTML + "</div>"
 		fmt.Println("rowHTML: ", rowHTML)
@@ -229,7 +229,7 @@ func (n *NoteHandler) DeleteCheckboxNoteItem(this js.Value, args []js.Value) int
 		}
 
 		rowHTML = rowHTML + "<div class='form-group form-check'>"
-		rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
+		//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
 		rowHTML = rowHTML + "<input id='newtxt' onchange='addCheckItem(" + niddStr + ")' type='text' class='form-control'>"
 		rowHTML = rowHTML + "</div>"
 		fmt.Println("rowHTML: ", rowHTML)
@@ -291,7 +291,7 @@ func (n *NoteHandler) UpdateCheckboxNoteTitle(this js.Value, args []js.Value) in
 
 		}
 		rowHTML = rowHTML + "<div class='form-group form-check'>"
-		rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
+		//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
 		rowHTML = rowHTML + "<input id='newtxt' onchange='addCheckItem(" + niddStr + ")' type='text' class='form-control'>"
 		rowHTML = rowHTML + "</div>"
 

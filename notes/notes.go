@@ -8,15 +8,41 @@ import (
 	"syscall/js"
 )
 
+/*
+
+   Copyright (C) 2020 Ulbora Labs LLC. (www.ulboralabs.com)
+   All rights reserved.
+
+   Copyright (C) 2020 Ken Williamson
+   All rights reserved.
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 //Handler Handler
 type Handler interface {
 	Login(this js.Value, args []js.Value) interface{}
+
 	GetNoteList(this js.Value, args []js.Value) interface{}
 	GetNote(this js.Value, args []js.Value) interface{}
+
 	UpdateCheckboxNoteTitle(this js.Value, args []js.Value) interface{}
 	UpdateCheckboxNoteItem(this js.Value, args []js.Value) interface{}
 	AddCheckboxNoteItem(this js.Value, args []js.Value) interface{}
 	DeleteCheckboxNoteItem(this js.Value, args []js.Value) interface{}
+
+	UpdateTextNoteTitle(this js.Value, args []js.Value) interface{}
+	UpdateTextNoteItem(this js.Value, args []js.Value) interface{}
+	AddTextNoteItem(this js.Value, args []js.Value) interface{}
 }
 
 //NoteHandler NoteHandler
@@ -102,6 +128,7 @@ func (n *NoteHandler) PopulateNoteList(email string) {
 		document := js.Global().Get("document")
 		document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "block")
 		document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "none")
+		document.Call("getElementById", "textNote").Get("style").Call("setProperty", "display", "none")
 		//document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "block")
 		var rowHTML = ""
 		for i, nt := range *noteList {

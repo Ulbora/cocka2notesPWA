@@ -84,6 +84,11 @@ func main() {
 	js.Global().Set("updateCheckItem", js.FuncOf(h.UpdateCheckboxNoteItem))
 	js.Global().Set("addCheckItem", js.FuncOf(h.AddCheckboxNoteItem))
 	js.Global().Set("deleteCheckItem", js.FuncOf(h.DeleteCheckboxNoteItem))
+
+	js.Global().Set("updateTextTitle", js.FuncOf(h.UpdateTextNoteTitle))
+	js.Global().Set("updateTextItem", js.FuncOf(h.UpdateTextNoteItem))
+	js.Global().Set("addTextItem", js.FuncOf(h.AddTextNoteItem))
+
 	js.Global().Set("login", js.FuncOf(h.Login))
 
 	//func Clone() js.Func {

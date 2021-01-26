@@ -81,10 +81,22 @@
 	<div id="checkboxNote" class="container-sm" style="display: none;">
 		<input type="hidden" id="noteId"> 
 		<div class="form-group mt-3">
-			<label for="email"><b>Title</b></label>
-			<input onchange="updateCheckTitle()" name="title" type="text" class="form-control" id="checkboxTitle">
+			<label for="title"><b>Title</b></label>
+			<input onchange="updateCheckTitle()" name="title" type="text" class="form-control" style="background-color: rgb(141, 193, 238);" id="checkboxTitle">
 		</div>
 		<div id="checkboxes">
+
+		</div>
+	</div>
+
+
+	<div id="textNote" class="container-sm" style="display: none;">
+		<input type="hidden" id="noteId"> 
+		<div class="form-group mt-3">
+			<label for="title"><b>Title</b></label>
+			<input onchange="updateTextTitle()" name="title" type="text" class="form-control"  style="background-color: rgb(141, 193, 238);" id="textTitle">
+		</div>
+		<div id="items">
 
 		</div>
 	</div>
