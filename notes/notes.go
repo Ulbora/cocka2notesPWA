@@ -34,6 +34,8 @@ type Handler interface {
 
 	GetNoteList(this js.Value, args []js.Value) interface{}
 	GetNote(this js.Value, args []js.Value) interface{}
+	AddNote(this js.Value, args []js.Value) interface{}
+	AddNewNote(this js.Value, args []js.Value) interface{}
 
 	UpdateCheckboxNoteTitle(this js.Value, args []js.Value) interface{}
 	UpdateCheckboxNoteItem(this js.Value, args []js.Value) interface{}
@@ -43,6 +45,10 @@ type Handler interface {
 	UpdateTextNoteTitle(this js.Value, args []js.Value) interface{}
 	UpdateTextNoteItem(this js.Value, args []js.Value) interface{}
 	AddTextNoteItem(this js.Value, args []js.Value) interface{}
+	DeleteTextNoteItem(this js.Value, args []js.Value) interface{}
+
+	AddUsersToNote(this js.Value, args []js.Value) interface{}
+	AddNoteUser(this js.Value, args []js.Value) interface{}
 }
 
 //NoteHandler NoteHandler
@@ -59,22 +65,6 @@ func (n *NoteHandler) GetNew() Handler {
 
 //GetNoteList GetNoteList
 func (n *NoteHandler) GetNoteList(this js.Value, args []js.Value) interface{} {
-	// // cookie1 := js.Global().Get("document").Get("username").String()
-	// // fmt.Println("cookie1: ", cookie1)
-	// fmt.Println("n.API", n.API)
-	// // noteList := n.API.GetUsersNotes("tester@tester.com")
-	// // fmt.Println(*noteList)
-	// document := js.Global().Get("document")
-	// document.Call("getElementById", "job").Set("value", "Engineer of Notes to go")
-	// return js.Null()
-	// go func() {
-	// 	noteList := n.API.GetUsersNotes("tester@tester.com")
-	// 	fmt.Println(*noteList)
-	// 	// document := js.Global().Get("document")
-	// 	// document.Call("getElementById", "job").Set("value", (*noteList)[0].Title)
-	// 	//email := js.Global().Get("document").Get("email").String()
-	// 	//fmt.Println(email)
-	// }()
 	n.PopulateNoteList(n.Email)
 	return js.Null()
 }
@@ -113,9 +103,6 @@ func (n *NoteHandler) Login(this js.Value, args []js.Value) interface{} {
 			}
 		}
 
-		// document.Call("getElementById", "job").Set("value", (*noteList)[0].Title)
-		//email := js.Global().Get("document").Get("email").String()
-		//fmt.Println(email)
 	}()
 	return js.Null()
 }
@@ -130,6 +117,11 @@ func (n *NoteHandler) PopulateNoteList(email string) {
 		document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "none")
 		document.Call("getElementById", "textNote").Get("style").Call("setProperty", "display", "none")
 		//document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "block")
+		document.Call("getElementById", "noteUserForm").Get("style").Call("setProperty", "display", "none")
+		document.Call("getElementById", "noteUserTable").Get("style").Call("setProperty", "display", "none")
+		document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "none")
+		document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "none")
+		document.Call("getElementById", "newNoteTitle").Set("value", "")
 		var rowHTML = ""
 		for i, nt := range *noteList {
 			var row = i + 1

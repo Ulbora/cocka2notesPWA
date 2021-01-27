@@ -3,8 +3,8 @@ package notes
 import (
 	"fmt"
 	//lg "github.com/Ulbora/Level_Logger"
-	//api "github.com/Ulbora/cocka2notesApi"
-	"strconv"
+	api "github.com/Ulbora/cocka2notesApi"
+	//"strconv"
 	"syscall/js"
 )
 
@@ -38,87 +38,74 @@ func (n *NoteHandler) GetNote(this js.Value, args []js.Value) interface{} {
 	fmt.Println("id", id)
 	go func() {
 		if args[1].String() == "note" {
-			note := n.API.GetNote(id)
-			fmt.Println("note", *note)
+
 			document := js.Global().Get("document")
 			document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "none")
 			document.Call("getElementById", "textNote").Get("style").Call("setProperty", "display", "block")
-			document.Call("getElementById", "textTitle").Set("value", note.Title)
+			//document.Call("getElementById", "textTitle").Set("value", note.Title)
 			document.Call("getElementById", "noteId").Set("value", idInt)
-			var rowHTML = ""
-			var niddStr = strconv.FormatInt(id, 10)
-			for _, nt := range note.NoteItems {
-				fmt.Println("textItem", nt)
-				var idStr = strconv.FormatInt(nt.ID, 10)
-				var nidStr = strconv.FormatInt(nt.NoteID, 10)
-				//var ched = ""
 
-				// if nt.Checked {
-				// 	ched = "checked"
-				// }
-				rowHTML = rowHTML + "<div class='form-row'>"
-				rowHTML = rowHTML + "<div class='form-group form-row-l'>"
-				//rowHTML = rowHTML + "<div class='form-check'>"
-				//rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
-				rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateTextItem(" + idStr + "," + nidStr + "," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-				rowHTML = rowHTML + "</div>"
-				//rowHTML = rowHTML + "</div>"
-				rowHTML = rowHTML + "<div class='form-group form-row-r'>"
-				rowHTML = rowHTML + "<button onclick='deleteNoteItem(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
-				rowHTML = rowHTML + "</div>"
-				rowHTML = rowHTML + "</div>"
+			n.populateTextNote(id)
 
-			}
-			rowHTML = rowHTML + "<div class='form-group'>"
-			//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
-			rowHTML = rowHTML + "<input id='newtxt' onchange='addTextItem(" + niddStr + ")' type='text' class='form-control'>"
-			rowHTML = rowHTML + "</div>"
-
-			fmt.Println("rowHTML: ", rowHTML)
-			document.Call("getElementById", "items").Set("innerHTML", rowHTML)
 		} else if args[1].String() == "checkbox" {
-			note := n.API.GetCheckboxNote(id)
-			fmt.Println("checkbox note", *note)
+
 			document := js.Global().Get("document")
 			document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "none")
 			document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "block")
-			document.Call("getElementById", "checkboxTitle").Set("value", note.Title)
+			//document.Call("getElementById", "checkboxTitle").Set("value", note.Title)
 			document.Call("getElementById", "noteId").Set("value", idInt)
-			var rowHTML = ""
-			var niddStr = strconv.FormatInt(id, 10)
-			for _, nt := range note.NoteItems {
-				fmt.Println("checkbox", nt)
-				var idStr = strconv.FormatInt(nt.ID, 10)
-				var nidStr = strconv.FormatInt(nt.NoteID, 10)
-				var ched = ""
 
-				if nt.Checked {
-					ched = "checked"
-				}
-				rowHTML = rowHTML + "<div class='form-row'>"
-				rowHTML = rowHTML + "<div class='form-group form-row-l'>"
-				rowHTML = rowHTML + "<div class='form-check'>"
-				rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
-				rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-				rowHTML = rowHTML + "</div>"
-				rowHTML = rowHTML + "</div>"
-				rowHTML = rowHTML + "<div class='form-group form-row-r'>"
-				rowHTML = rowHTML + "<button onclick='deleteCheckItem(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
-				rowHTML = rowHTML + "</div>"
-				rowHTML = rowHTML + "</div>"
+			n.pupulateCheckboxNote(id)
 
-			}
-			rowHTML = rowHTML + "<div class='form-group form-check'>"
-			//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
-			rowHTML = rowHTML + "<input id='newtxt' onchange='addCheckItem(" + niddStr + ")' type='text' class='form-control'>"
-			rowHTML = rowHTML + "</div>"
-
-			fmt.Println("rowHTML: ", rowHTML)
-			document.Call("getElementById", "checkboxes").Set("innerHTML", rowHTML)
 		}
 
 	}()
 
 	//noteList := n.API.GetNote(email)
+	return js.Null()
+}
+
+//AddNote AddNote
+func (n *NoteHandler) AddNote(this js.Value, args []js.Value) interface{} {
+	document := js.Global().Get("document")
+	document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "textNote").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "noteUserForm").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "noteUserTable").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "block")
+	fmt.Println("Add a note")
+	return js.Null()
+}
+
+//AddNewNote AddNewNote
+func (n *NoteHandler) AddNewNote(this js.Value, args []js.Value) interface{} {
+	document := js.Global().Get("document")
+	//document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "none")
+	fmt.Println("Add a new note")
+	ntitle := document.Call("getElementById", "newNoteTitle").Get("value").String()
+	ntype := document.Call("getElementById", "newNoteType").Get("value").String()
+	//ntype2 := document.Call("getElementById", "newNoteType2").Get("value").String()
+	fmt.Println("ntitle", ntitle)
+	fmt.Println("ntype", ntype)
+
+	if ntitle != "" {
+		go func() {
+			var newnote api.Note
+			newnote.Title = ntitle
+			if ntype == "Checkbox" {
+				newnote.Type = "checkbox"
+			} else {
+				newnote.Type = "note"
+			}
+			newnote.OwnerEmail = n.Email
+
+			res := n.API.AddNote(&newnote)
+			if res.Success {
+				n.PopulateNoteList(n.Email)
+			}
+		}()
+	}
+
 	return js.Null()
 }

@@ -47,41 +47,7 @@ func (n *NoteHandler) UpdateTextNoteTitle(this js.Value, args []js.Value) interf
 		res := n.API.UpdateNote(&unote)
 		fmt.Println("cb note update suc: ", res.Success)
 
-		note := n.API.GetNote(noteID)
-		fmt.Println("checkbox note", *note)
-		document := js.Global().Get("document")
-		document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "none")
-		document.Call("getElementById", "textNote").Get("style").Call("setProperty", "display", "block")
-		document.Call("getElementById", "textTitle").Set("value", note.Title)
-		document.Call("getElementById", "noteId").Set("value", noteIDStr)
-		var rowHTML = ""
-		var niddStr = strconv.FormatInt(noteID, 10)
-		for _, nt := range note.NoteItems {
-			fmt.Println("textnote", nt)
-			var idStr = strconv.FormatInt(nt.ID, 10)
-			var nidStr = strconv.FormatInt(nt.NoteID, 10)
-			//var ched = ""
-
-			rowHTML = rowHTML + "<div class='form-row'>"
-			rowHTML = rowHTML + "<div class='form-group form-row-l'>"
-			//rowHTML = rowHTML + "<div class='form-check'>"
-			//rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
-			rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateTextItem(" + idStr + "," + nidStr + "," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-			rowHTML = rowHTML + "</div>"
-			//rowHTML = rowHTML + "</div>"
-			rowHTML = rowHTML + "<div class='form-group form-row-r'>"
-			rowHTML = rowHTML + "<button onclick='deleteTextItem(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
-			rowHTML = rowHTML + "</div>"
-			rowHTML = rowHTML + "</div>"
-
-		}
-		rowHTML = rowHTML + "<div class='form-group'>"
-		//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
-		rowHTML = rowHTML + "<input id='newtxt' onchange='addTextItem(" + niddStr + ")' type='text' class='form-control'>"
-		rowHTML = rowHTML + "</div>"
-
-		fmt.Println("rowHTML: ", rowHTML)
-		document.Call("getElementById", "items").Set("innerHTML", rowHTML)
+		n.populateTextNote(noteID)
 
 	}()
 
@@ -111,44 +77,8 @@ func (n *NoteHandler) UpdateTextNoteItem(this js.Value, args []js.Value) interfa
 		res := n.API.UpdateNoteItem(&item)
 		fmt.Println("textnote item update suc: ", res.Success)
 
-		note := n.API.GetNote(noteID)
-		fmt.Println("textbox note", *note)
-		//document := js.Global().Get("document")
-		document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "none")
-		document.Call("getElementById", "textNote").Get("style").Call("setProperty", "display", "block")
-		document.Call("getElementById", "textTitle").Set("value", note.Title)
-		//document.Call("getElementById", "noteId").Set("value", noteIDStr)
-		var rowHTML = ""
-		var niddStr = strconv.FormatInt(noteID, 10)
-		for _, nt := range note.NoteItems {
-			fmt.Println("checkbox", nt)
-			var idStr = strconv.FormatInt(nt.ID, 10)
-			var nidStr = strconv.FormatInt(nt.NoteID, 10)
-			//var ched = ""
+		n.populateTextNote(noteID)
 
-			// if nt.Checked {
-			// 	ched = "checked"
-			// }
-			rowHTML = rowHTML + "<div class='form-row'>"
-			rowHTML = rowHTML + "<div class='form-group form-row-l'>"
-			//rowHTML = rowHTML + "<div class='form-check'>"
-			//rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
-			rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateTextItem(" + idStr + "," + nidStr + "," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-			rowHTML = rowHTML + "</div>"
-			//rowHTML = rowHTML + "</div>"
-			rowHTML = rowHTML + "<div class='form-group form-row-r'>"
-			rowHTML = rowHTML + "<button onclick='deleteTextItem(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
-			rowHTML = rowHTML + "</div>"
-			rowHTML = rowHTML + "</div>"
-
-		}
-		rowHTML = rowHTML + "<div class='form-group'>"
-		//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
-		rowHTML = rowHTML + "<input id='newtxt' onchange='addTextItem(" + niddStr + ")' type='text' class='form-control'>"
-		rowHTML = rowHTML + "</div>"
-
-		fmt.Println("rowHTML: ", rowHTML)
-		document.Call("getElementById", "items").Set("innerHTML", rowHTML)
 	}()
 
 	return js.Null()
@@ -172,45 +102,74 @@ func (n *NoteHandler) AddTextNoteItem(this js.Value, args []js.Value) interface{
 		res := n.API.AddNoteItem(&item)
 		fmt.Println("cb update suc: ", res.Success)
 
-		note := n.API.GetNote(noteID)
-		fmt.Println("textbox note", *note)
-		//document := js.Global().Get("document")
-		document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "none")
-		document.Call("getElementById", "textNote").Get("style").Call("setProperty", "display", "block")
-		document.Call("getElementById", "textTitle").Set("value", note.Title)
-		//document.Call("getElementById", "noteId").Set("value", noteIDInt)
-		var rowHTML = ""
-		var niddStr = strconv.FormatInt(noteID, 10)
-		for _, nt := range note.NoteItems {
-			fmt.Println("checkbox", nt)
-			var idStr = strconv.FormatInt(nt.ID, 10)
-			var nidStr = strconv.FormatInt(nt.NoteID, 10)
-			//var ched = ""
-
-			// if nt.Checked {
-			// 	ched = "checked"
-			// }
-			rowHTML = rowHTML + "<div class='form-row'>"
-			rowHTML = rowHTML + "<div class='form-group form-row-l'>"
-			//rowHTML = rowHTML + "<div class='form-check'>"
-			//rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
-			rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateTextItem(" + idStr + "," + nidStr + "," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-			rowHTML = rowHTML + "</div>"
-			//rowHTML = rowHTML + "</div>"
-			rowHTML = rowHTML + "<div class='form-group form-row-r'>"
-			rowHTML = rowHTML + "<button onclick='deleteTextItem(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
-			rowHTML = rowHTML + "</div>"
-			rowHTML = rowHTML + "</div>"
-
-		}
-		rowHTML = rowHTML + "<div class='form-group'>"
-		//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
-		rowHTML = rowHTML + "<input id='newtxt' onchange='addTextItem(" + niddStr + ")' type='text' class='form-control'>"
-		rowHTML = rowHTML + "</div>"
-
-		fmt.Println("rowHTML: ", rowHTML)
-		document.Call("getElementById", "items").Set("innerHTML", rowHTML)
+		n.populateTextNote(noteID)
 
 	}()
 	return js.Null()
+}
+
+//DeleteTextNoteItem DeleteTextNoteItem
+func (n *NoteHandler) DeleteTextNoteItem(this js.Value, args []js.Value) interface{} {
+	fmt.Println("id", args[0])
+	fmt.Println("noteId", args[1])
+	//fmt.Println("checked", args[2])
+	//fmt.Println("text", args[3])
+
+	var idInt = args[0].Int()
+	var id = int64(idInt)
+	//var idStr = strconv.FormatInt(id, 10)
+	var noteIDInt = args[1].Int()
+	var noteID = int64(noteIDInt)
+
+	go func() {
+		res := n.API.DeleteNoteItem(id)
+		fmt.Println("cb delete suc: ", res.Success)
+		n.populateTextNote(noteID)
+
+	}()
+
+	return js.Null()
+}
+
+func (n *NoteHandler) populateTextNote(noteID int64) {
+
+	note := n.API.GetNote(noteID)
+	fmt.Println("textbox note", *note)
+	document := js.Global().Get("document")
+	document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "textNote").Get("style").Call("setProperty", "display", "block")
+	document.Call("getElementById", "textTitle").Set("value", note.Title)
+	//document.Call("getElementById", "noteId").Set("value", idInt)
+	//document.Call("getElementById", "noteId").Set("value", noteIDStr)
+	var rowHTML = ""
+	var niddStr = strconv.FormatInt(noteID, 10)
+	for _, nt := range note.NoteItems {
+		fmt.Println("checkbox", nt)
+		var idStr = strconv.FormatInt(nt.ID, 10)
+		var nidStr = strconv.FormatInt(nt.NoteID, 10)
+		//var ched = ""
+
+		// if nt.Checked {
+		// 	ched = "checked"
+		// }
+		rowHTML = rowHTML + "<div class='form-row'>"
+		rowHTML = rowHTML + "<div class='form-group form-row-l'>"
+		//rowHTML = rowHTML + "<div class='form-check'>"
+		//rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
+		rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateTextItem(" + idStr + "," + nidStr + "," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
+		rowHTML = rowHTML + "</div>"
+		//rowHTML = rowHTML + "</div>"
+		rowHTML = rowHTML + "<div class='form-group form-row-r'>"
+		rowHTML = rowHTML + "<button onclick='deleteTextItem(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
+		rowHTML = rowHTML + "</div>"
+		rowHTML = rowHTML + "</div>"
+
+	}
+	rowHTML = rowHTML + "<div class='form-group'>"
+	//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
+	rowHTML = rowHTML + "<input id='newtxt' onchange='addTextItem(" + niddStr + ")' type='text' class='form-control' style='width: 80%; margin: 0 0 0 2%;' placeholder='Add another item'>"
+	rowHTML = rowHTML + "</div>"
+
+	fmt.Println("rowHTML: ", rowHTML)
+	document.Call("getElementById", "items").Set("innerHTML", rowHTML)
 }

@@ -80,6 +80,9 @@ func main() {
 
 	js.Global().Set("getNotes", js.FuncOf(h.GetNoteList))
 	js.Global().Set("showNote", js.FuncOf(h.GetNote))
+	js.Global().Set("addNewNote", js.FuncOf(h.AddNote))
+	js.Global().Set("addNote", js.FuncOf(h.AddNewNote))
+
 	js.Global().Set("updateCheckTitle", js.FuncOf(h.UpdateCheckboxNoteTitle))
 	js.Global().Set("updateCheckItem", js.FuncOf(h.UpdateCheckboxNoteItem))
 	js.Global().Set("addCheckItem", js.FuncOf(h.AddCheckboxNoteItem))
@@ -88,6 +91,10 @@ func main() {
 	js.Global().Set("updateTextTitle", js.FuncOf(h.UpdateTextNoteTitle))
 	js.Global().Set("updateTextItem", js.FuncOf(h.UpdateTextNoteItem))
 	js.Global().Set("addTextItem", js.FuncOf(h.AddTextNoteItem))
+	js.Global().Set("deleteTextItem", js.FuncOf(h.DeleteTextNoteItem))
+
+	js.Global().Set("addUsersToNote", js.FuncOf(h.AddUsersToNote))
+	js.Global().Set("addNoteUser", js.FuncOf(h.AddNoteUser))
 
 	js.Global().Set("login", js.FuncOf(h.Login))
 

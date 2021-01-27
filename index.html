@@ -25,8 +25,8 @@
 <body>
 
 
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a class="navbar-brand" href="#">Cocka2Notes</a>
+	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" onclick="getNotes()" href="#">Cocka2Notes</a>
 
 		<ul class="nav">
 
@@ -35,7 +35,7 @@
 			</li>
 
 			<li class="nav-item">
-				<a href="#" class="nav-link" style="color: ghostwhite;" onclick="getNotes()">New Note</a>
+				<a href="#" class="nav-link" style="color: ghostwhite;" onclick="addNewNote()">New Note</a>
 			</li>
 
 			<li class="nav-item">
@@ -64,42 +64,123 @@
 	</div>
 
 	<div id="noteList" class="container-sm" style="display: none;">
-		<table class="table table-hover mt-3">
-			<thead>
-				<tr>
-					<th scope="col">#</th>
-					<th scope="col">Note Title</th>
-					<th scope="col">Last Updated</th>
-				</tr>
-			</thead>
-			<tbody id="noteListBody">
+		<div class="mt-5" style="padding: 1% 0 2% 0;">
+			<table class="table table-hover mt-3">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Note Title</th>
+						<th scope="col">Last Updated</th>
+					</tr>
+				</thead>
+				<tbody id="noteListBody">
 
-			</tbody>
-		</table>
+				</tbody>
+			</table>
+		</div>
 	</div>
 
 	<div id="checkboxNote" class="container-sm" style="display: none;">
-		<input type="hidden" id="noteId"> 
+		<input type="hidden" id="noteId">
+		<div style="padding: 6% 0 0 0;">
+			<div class="form-row mt-5">
+				<div class="form-group form-row-l">
+					<button onclick="addUsersToNote()" type="button" class="btn btn-success">Add Others to
+						Note</button>
+				</div>
+				<div class="form-group form-row-r">
+					<button onclick="deleteNoteConfirm()" type="button" class="btn btn-danger delete-btn">X</button>
+				</div>
+			</div>
+		</div>
 		<div class="form-group mt-3">
 			<label for="title"><b>Title</b></label>
-			<input onchange="updateCheckTitle()" name="title" type="text" class="form-control" style="background-color: rgb(141, 193, 238);" id="checkboxTitle">
+			<input onchange="updateCheckTitle()" name="title" type="text" class="form-control"
+				style="background-color: rgb(141, 193, 238);" id="checkboxTitle">
 		</div>
-		<div id="checkboxes">
+		<div id="checkboxes" style="padding: 0 0 10% 0;">
 
 		</div>
 	</div>
 
 
 	<div id="textNote" class="container-sm" style="display: none;">
-		<input type="hidden" id="noteId"> 
+		<input type="hidden" id="noteId">
+		<div style="padding: 6% 0 0 0;">
+			<div class="form-row mt-5">
+				<div class="form-group form-row-l">
+					<button onclick="addUsersToNote()" type="button" class="btn btn-success">Add Others to
+						Note</button>
+				</div>
+				<div class="form-group form-row-r">
+					<button onclick="deleteNoteConfirm()" type="button" class="btn btn-danger delete-btn">X</button>
+				</div>
+			</div>
+		</div>
 		<div class="form-group mt-3">
 			<label for="title"><b>Title</b></label>
-			<input onchange="updateTextTitle()" name="title" type="text" class="form-control"  style="background-color: rgb(141, 193, 238);" id="textTitle">
+			<input onchange="updateTextTitle()" name="title" type="text" class="form-control"
+				style="background-color: rgb(141, 193, 238);" id="textTitle">
 		</div>
-		<div id="items">
+		<div id="items" style="padding: 0 0 10% 0;">
 
 		</div>
 	</div>
+
+
+
+	<div id="noteUserForm" class="container-sm" style="display: none;">
+		<div class="shadow-none p-3 mb-2 mt-5 rounded">
+			<h1>Add a user</h1>
+			<div class="form-group">
+				<label for="email">Email</label>
+				<input name="email" type="email" class="form-control" id="newemail" placeholder="name@example.com">
+			</div>
+			<button onclick="addNoteUser()" class="btn btn-primary">Submit</button>
+		</div>
+
+		<div id="userworning" class="alert alert-danger" role="alert" style="display: none;">
+			User not found! The user must be a register user of Cocka2 Notes.
+		</div>
+
+		<div id="notEmailWarn" class="alert alert-danger" role="alert" style="display: none;">
+			Must be and email address!
+		</div>
+
+		<div id="noteUserTable" class="shadow-none p-3 mb-5" style="display: none;">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th scope="col">Existing Note Users</th>
+					</tr>
+				</thead>
+				<tbody id="noteUsersBody">
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+
+	<div id="addNoteForm" class="container-sm" style="display: none;">
+		<div class="shadow-none p-3 mb-2 mt-5 rounded">
+			<div class="form-group row">
+				<label for="formGroupExampleInput"><b>Title</b></label>
+				<input type="text" class="form-control" id="newNoteTitle" placeholder="Enter some title">
+			</div>
+			<div class="form-group row">
+				<label for="newNoteType"><b>Type</b></label>
+				<select class="form-control" id="newNoteType">
+					<option>Checkbox</option>
+					<option>Text</option>
+				</select>
+			</div>
+			<button onclick="addNote()" class="btn btn-primary mt-3">Add</button>
+		</div>
+
+	</div>
+
+
 
 
 </body>
