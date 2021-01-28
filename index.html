@@ -39,7 +39,7 @@
 			</li>
 
 			<li class="nav-item">
-				<a href="#" class="nav-link" style="color: ghostwhite;" onclick="getNotes()">Login</a>
+				<a href="#" class="nav-link" style="color: ghostwhite;" onclick="loginScreen()">Login</a>
 			</li>
 
 		</ul>
@@ -47,7 +47,7 @@
 	</nav>
 
 	<div id="loginScreen" class="container-sm" style="display: none;">
-		<div class="shadow-none p-3 mb-5 mt-5 bg-secondary rounded">
+		<div class="shadow-none p-3 mb-5 mt-5 rounded">
 			<h1>Login</h1>
 			<!-- <form>                 -->
 			<div class="form-group">
@@ -61,6 +61,34 @@
 			<button onclick="login()" class="btn btn-primary">Submit</button>
 			<!-- </form> -->
 		</div>
+		<nav class="nav">
+			<a onclick="changePwScreen()" class="nav-link active" href="#">Change Password</a>
+			<a class="nav-link" href="#">Reset Password</a>			
+		  </nav>
+	</div>
+
+
+	<div id="changePwScreen" class="container-sm" style="display: none;">
+		<div class="shadow-none p-3 mb-5 mt-5 rounded">
+			<h1>Change Password</h1>
+			<!-- <form>                 -->
+			<div class="form-group">
+				<label for="email">Email</label>
+				<input disabled name="cpwemail" type="text" class="form-control" id="cpwemail">
+			</div>
+			<div class="form-group">
+				<label for="newPassword">Password</label>
+				<input name="newPassword" type="password" class="form-control" id="newPassword">
+			</div>
+			<div class="form-group">
+				<label for="newPassword">Confirm</label>
+				<input name="newPassword" type="password" class="form-control" id="newPassword2">
+			</div>
+			<button onclick="changePassword()" class="btn btn-primary">Submit</button>
+			<div id="pwnotMatch" class="alert alert-danger mt-4" role="alert">
+				Passwords didn't match!
+			  </div>
+		</div>		
 	</div>
 
 	<div id="noteList" class="container-sm" style="display: none;">

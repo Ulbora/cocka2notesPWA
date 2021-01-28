@@ -4,7 +4,7 @@ import (
 	"fmt"
 	//lg "github.com/Ulbora/Level_Logger"
 	api "github.com/Ulbora/cocka2notesApi"
-	//"strconv"
+	"strconv"
 	"syscall/js"
 )
 
@@ -73,6 +73,8 @@ func (n *NoteHandler) AddNote(this js.Value, args []js.Value) interface{} {
 	document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "noteUserForm").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "noteUserTable").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "changePwScreen").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "block")
 	fmt.Println("Add a note")
 	return js.Null()
@@ -98,14 +100,36 @@ func (n *NoteHandler) AddNewNote(this js.Value, args []js.Value) interface{} {
 			} else {
 				newnote.Type = "note"
 			}
-			newnote.OwnerEmail = n.Email
+			emailFn := js.Global().Get("getUserEmail")
+			cemail := emailFn.Invoke()
+			newnote.OwnerEmail = cemail.String()
 
 			res := n.API.AddNote(&newnote)
 			if res.Success {
-				n.PopulateNoteList(n.Email)
+				n.PopulateNoteList(cemail.String())
 			}
 		}()
 	}
+
+	return js.Null()
+}
+
+//DeleteNote DeleteNote
+func (n *NoteHandler) DeleteNote(this js.Value, args []js.Value) interface{} {
+	document := js.Global().Get("document")
+	noteIDStr := document.Call("getElementById", "noteId").Get("value").String()
+	fmt.Println("text note noteIDStr", noteIDStr)
+	noteID, _ := strconv.ParseInt(noteIDStr, 10, 64)
+	fmt.Println("text note noteID", noteID)
+	emailFn := js.Global().Get("getUserEmail")
+	cemail := emailFn.Invoke()
+	go func() {
+		res := n.API.DeleteNote(noteID, cemail.String())
+		if !res.Success {
+			fmt.Println("Failed to delete note: ", noteID)
+		}
+		n.PopulateNoteList(cemail.String())
+	}()
 
 	return js.Null()
 }

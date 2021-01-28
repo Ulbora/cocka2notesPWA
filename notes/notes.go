@@ -30,12 +30,16 @@ import (
 
 //Handler Handler
 type Handler interface {
+	LoginScreen(this js.Value, args []js.Value) interface{}
 	Login(this js.Value, args []js.Value) interface{}
+	ChangePwScreen(this js.Value, args []js.Value) interface{}
+	ChangePassword(this js.Value, args []js.Value) interface{}
 
 	GetNoteList(this js.Value, args []js.Value) interface{}
 	GetNote(this js.Value, args []js.Value) interface{}
 	AddNote(this js.Value, args []js.Value) interface{}
 	AddNewNote(this js.Value, args []js.Value) interface{}
+	DeleteNote(this js.Value, args []js.Value) interface{}
 
 	UpdateCheckboxNoteTitle(this js.Value, args []js.Value) interface{}
 	UpdateCheckboxNoteItem(this js.Value, args []js.Value) interface{}
@@ -53,9 +57,9 @@ type Handler interface {
 
 //NoteHandler NoteHandler
 type NoteHandler struct {
-	API   api.API
-	Log   *lg.Logger
-	Email string
+	API api.API
+	Log *lg.Logger
+	//Email string
 }
 
 //GetNew GetNew
@@ -65,45 +69,9 @@ func (n *NoteHandler) GetNew() Handler {
 
 //GetNoteList GetNoteList
 func (n *NoteHandler) GetNoteList(this js.Value, args []js.Value) interface{} {
-	n.PopulateNoteList(n.Email)
-	return js.Null()
-}
-
-//Login Login
-func (n *NoteHandler) Login(this js.Value, args []js.Value) interface{} {
-	go func() {
-		document := js.Global().Get("document")
-		email := document.Call("getElementById", "email").Get("value").String()
-		fmt.Println(email)
-		pw := document.Call("getElementById", "password").Get("value").String()
-		fmt.Println(pw)
-		var u api.User
-		u.Email = email
-		u.Password = pw
-		res := n.API.Login(&u)
-		fmt.Println("login suc: ", *res)
-		if res.Success {
-			emailc := js.Global().Get("setUserEmail")
-			emailc.Invoke(email)
-			n.Email = email
-			document := js.Global().Get("document")
-			document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
-			//go to note list
-			n.PopulateNoteList(email)
-		} else if res.Email == "" {
-			// auto create a new account
-			suc := n.API.AddUser(&u)
-			if suc.Success {
-				emailc := js.Global().Get("setUserEmail")
-				emailc.Invoke(email)
-				document := js.Global().Get("document")
-				document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
-				// gto to note list
-				n.PopulateNoteList(email)
-			}
-		}
-
-	}()
+	emailFn := js.Global().Get("getUserEmail")
+	cemail := emailFn.Invoke()
+	n.PopulateNoteList(cemail.String())
 	return js.Null()
 }
 
@@ -120,7 +88,9 @@ func (n *NoteHandler) PopulateNoteList(email string) {
 		document.Call("getElementById", "noteUserForm").Get("style").Call("setProperty", "display", "none")
 		document.Call("getElementById", "noteUserTable").Get("style").Call("setProperty", "display", "none")
 		document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "none")
-		document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "none")
+		//document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "none")
+		document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
+		document.Call("getElementById", "changePwScreen").Get("style").Call("setProperty", "display", "none")
 		document.Call("getElementById", "newNoteTitle").Set("value", "")
 		var rowHTML = ""
 		for i, nt := range *noteList {
