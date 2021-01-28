@@ -2,10 +2,11 @@ package notes
 
 import (
 	"fmt"
-	lg "github.com/Ulbora/Level_Logger"
-	api "github.com/Ulbora/cocka2notesApi"
 	"strconv"
 	"syscall/js"
+
+	lg "github.com/Ulbora/Level_Logger"
+	api "github.com/Ulbora/cocka2notesApi"
 )
 
 /*
@@ -34,6 +35,8 @@ type Handler interface {
 	Login(this js.Value, args []js.Value) interface{}
 	ChangePwScreen(this js.Value, args []js.Value) interface{}
 	ChangePassword(this js.Value, args []js.Value) interface{}
+	ResetPwScreen(this js.Value, args []js.Value) interface{}
+	ResetPassword(this js.Value, args []js.Value) interface{}
 
 	GetNoteList(this js.Value, args []js.Value) interface{}
 	GetNote(this js.Value, args []js.Value) interface{}
@@ -91,6 +94,7 @@ func (n *NoteHandler) PopulateNoteList(email string) {
 		//document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "none")
 		document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
 		document.Call("getElementById", "changePwScreen").Get("style").Call("setProperty", "display", "none")
+		document.Call("getElementById", "resetPwScreen").Get("style").Call("setProperty", "display", "none")
 		document.Call("getElementById", "newNoteTitle").Set("value", "")
 		var rowHTML = ""
 		for i, nt := range *noteList {

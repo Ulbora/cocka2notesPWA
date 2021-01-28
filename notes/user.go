@@ -39,6 +39,7 @@ func (n *NoteHandler) LoginScreen(this js.Value, args []js.Value) interface{} {
 	document.Call("getElementById", "noteUserTable").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "changePwScreen").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "resetPwScreen").Get("style").Call("setProperty", "display", "none")
 	return js.Null()
 }
 
@@ -117,5 +118,29 @@ func (n *NoteHandler) ChangePassword(this js.Value, args []js.Value) interface{}
 	} else {
 		document.Call("getElementById", "pwnotMatch").Get("style").Call("setProperty", "display", "block")
 	}
+	return js.Null()
+}
+
+//ResetPwScreen ResetPwScreen
+func (n *NoteHandler) ResetPwScreen(this js.Value, args []js.Value) interface{} {
+	document := js.Global().Get("document")
+	document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "pwnotMatch").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "changePwScreen").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "resetPwScreen").Get("style").Call("setProperty", "display", "block")
+	emailFn := js.Global().Get("getUserEmail")
+	cemail := emailFn.Invoke()
+	document.Call("getElementById", "rpwemail").Set("value", cemail.String())
+	//document.Call("getElementById", "newPassword").Set("value", "")
+	//document.Call("getElementById", "newPassword2").Set("value", "")
+	//n.PopulateNoteList(cemail.String())
+	return js.Null()
+}
+
+//ResetPassword ResetPassword
+func (n *NoteHandler) ResetPassword(this js.Value, args []js.Value) interface{} {
+	document := js.Global().Get("document")
+	email := document.Call("getElementById", "rpwemail").Get("value").String()
+	fmt.Println("reseting password for: ", email)
 	return js.Null()
 }

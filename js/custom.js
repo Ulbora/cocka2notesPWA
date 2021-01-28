@@ -38,3 +38,12 @@ var deleteNoteConfirm = function () {
         deleteNote();
     } 
 }
+
+
+var resetPasswordConfirm = function () {
+    var r = confirm("This will reset your password!");
+    if (r == true) {
+        // txt = "You pressed OK!";
+        resetPassword();
+    } 
+}

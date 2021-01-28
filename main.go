@@ -1,10 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
+
 	lg "github.com/Ulbora/Level_Logger"
 	api "github.com/Ulbora/cocka2notesApi"
 	ns "github.com/Ulbora/cocka2notesWA/notes"
+
 	//"os"
 	"sync"
 	"syscall/js"
@@ -33,6 +37,12 @@ import (
 var wg sync.WaitGroup
 var nh ns.NoteHandler
 
+//Config Config
+type Config struct {
+	URL    string `json:"url"`
+	APIKey string `json:"apiKey"`
+}
+
 func main() {
 
 	wg.Add(1)
@@ -40,8 +50,8 @@ func main() {
 	var napi api.NotesAPI
 	var head api.Headers
 	napi.SetHeader(&head)
-	napi.SetRestURL("http://localhost:3000")
-	napi.SetAPIKey("GDG651GFD66FD16151sss651f651ff65555ddfhjklyy5")
+	//napi.SetRestURL("http://localhost:3000")
+	//napi.SetAPIKey("GDG651GFD66FD16151sss651f651ff65555ddfhjklyy5")
 	nh.API = napi.GetNew()
 
 	//api := napi.GetNew()
@@ -77,10 +87,38 @@ func main() {
 	js.Global().Set("loginScreen", js.FuncOf(h.LoginScreen))
 	js.Global().Set("changePwScreen", js.FuncOf(h.ChangePwScreen))
 	js.Global().Set("changePassword", js.FuncOf(h.ChangePassword))
+	js.Global().Set("resetPwScreen", js.FuncOf(h.ResetPwScreen))
+	js.Global().Set("resetPassword", js.FuncOf(h.ResetPassword))
 
 	// js.Global().Set("getNotes", MyGoFunc)
 
 	go func() {
+		req, rErr := http.NewRequest("GET", "http://localhost:8080/rs/config/get", nil)
+		fmt.Println("req err: ", rErr)
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		var conf Config
+		if err != nil {
+			fmt.Println("Do err: ", err)
+			fmt.Println("resp in fail: ", resp)
+		} else {
+			defer resp.Body.Close()
+			status := resp.StatusCode
+			fmt.Println("status: ", status)
+			//fmt.Println("resp.Body: ", resp.Body)
+			//fmt.Println("resp err: ", err)
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&conf)
+			if error != nil {
+				fmt.Println("Decode Error:  ", error.Error())
+			}
+		}
+		fmt.Println("conf: ", conf)
+		fmt.Println("url: ", conf.URL)
+		fmt.Println("api: ", conf.APIKey)
+		napi.SetRestURL(conf.URL)
+		napi.SetAPIKey(conf.APIKey)
+
 		emailFn := js.Global().Get("getUserEmail")
 		cemail := emailFn.Invoke()
 		fmt.Println("email: ", cemail)
