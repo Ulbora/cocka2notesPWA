@@ -50,29 +50,31 @@ func (n *NoteHandler) Login(this js.Value, args []js.Value) interface{} {
 		fmt.Println(email)
 		pw := document.Call("getElementById", "password").Get("value").String()
 		fmt.Println(pw)
-		var u api.User
-		u.Email = email
-		u.Password = pw
-		res := n.API.Login(&u)
-		fmt.Println("login suc: ", *res)
-		if res.Success {
-			emailc := js.Global().Get("setUserEmail")
-			emailc.Invoke(email)
-			//n.Email = email
-			document := js.Global().Get("document")
-			document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
-			//go to note list
-			n.PopulateNoteList(email)
-		} else if res.Email == "" {
-			// auto create a new account
-			suc := n.API.AddUser(&u)
-			if suc.Success {
+		if email != "" && pw != "" {
+			var u api.User
+			u.Email = email
+			u.Password = pw
+			res := n.API.Login(&u)
+			fmt.Println("login suc: ", *res)
+			if res.Success {
 				emailc := js.Global().Get("setUserEmail")
 				emailc.Invoke(email)
+				//n.Email = email
 				document := js.Global().Get("document")
 				document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
-				// gto to note list
+				//go to note list
 				n.PopulateNoteList(email)
+			} else if res.Email == "" {
+				// auto create a new account
+				suc := n.API.AddUser(&u)
+				if suc.Success {
+					emailc := js.Global().Get("setUserEmail")
+					emailc.Invoke(email)
+					document := js.Global().Get("document")
+					document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
+					// gto to note list
+					n.PopulateNoteList(email)
+				}
 			}
 		}
 
