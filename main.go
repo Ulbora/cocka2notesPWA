@@ -44,6 +44,7 @@ type Config struct {
 }
 
 func main() {
+	fmt.Println("nh.API start of main:", nh.API)
 
 	wg.Add(1)
 	// var nh ns.NoteHandler
@@ -57,7 +58,7 @@ func main() {
 	//api := napi.GetNew()
 	var l lg.Logger
 	napi.SetLogger(&l)
-	//napi.SetLogLevel(lg.AllLevel)
+	napi.SetLogLevel(lg.AllLevel)
 
 	h := nh.GetNew()
 
@@ -93,7 +94,7 @@ func main() {
 	// js.Global().Set("getNotes", MyGoFunc)
 
 	go func() {
-		req, rErr := http.NewRequest("GET", "http://localhost:8080/rs/config/get", nil)
+		req, rErr := http.NewRequest("GET", "http://www.cocka2notes.com/rs/config/get", nil)
 		fmt.Println("req err: ", rErr)
 		client := &http.Client{}
 		resp, err := client.Do(req)
@@ -116,9 +117,13 @@ func main() {
 		fmt.Println("conf: ", conf)
 		fmt.Println("url: ", conf.URL)
 		fmt.Println("api: ", conf.APIKey)
-		napi.SetRestURL(conf.URL)
-		napi.SetAPIKey(conf.APIKey)
-
+		if conf.APIKey != "" && conf.URL != "" {
+			napi.SetRestURL(conf.URL)
+			napi.SetAPIKey(conf.APIKey)
+		} else {
+			napi.SetRestURL("http://localhost:3000")
+			napi.SetAPIKey("GDG651GFD66FD16151sss651f651ff65555ddfhjklyy5")
+		}
 		emailFn := js.Global().Get("getUserEmail")
 		cemail := emailFn.Invoke()
 		fmt.Println("email: ", cemail)

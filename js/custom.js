@@ -47,3 +47,7 @@ var resetPasswordConfirm = function () {
         resetPassword();
     } 
 }
+
+var saveLocalStorage = function(key, jsonVal){
+    localStorage.setItem(key, jsonVal);
+}

@@ -23,9 +23,10 @@ package notes
 import (
 	"fmt"
 	//lg "github.com/Ulbora/Level_Logger"
-	api "github.com/Ulbora/cocka2notesApi"
 	"strconv"
 	"syscall/js"
+
+	api "github.com/Ulbora/cocka2notesApi"
 )
 
 //UpdateCheckboxNoteItem UpdateCheckboxNoteItem

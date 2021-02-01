@@ -1,6 +1,7 @@
 package notes
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"syscall/js"
@@ -65,6 +66,14 @@ type NoteHandler struct {
 	//Email string
 }
 
+func (n *NoteHandler) updateLocalCheckboxNoteItem(ntci *api.CheckboxNoteItem) {
+
+}
+
+func (n *NoteHandler) updateLocalNoteItem(ntci *api.NoteItem) {
+
+}
+
 //GetNew GetNew
 func (n *NoteHandler) GetNew() Handler {
 	return n
@@ -82,7 +91,11 @@ func (n *NoteHandler) GetNoteList(this js.Value, args []js.Value) interface{} {
 func (n *NoteHandler) PopulateNoteList(email string) {
 	go func() {
 		noteList := n.API.GetUsersNotes(email)
+		JSON, _ := json.Marshal(noteList)
+		sloc := js.Global().Get("saveLocalStorage")
+		sloc.Invoke("noteList", string(JSON))
 		fmt.Println("Note list in PopulateNoteList", *noteList)
+
 		document := js.Global().Get("document")
 		document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "block")
 		document.Call("getElementById", "checkboxNote").Get("style").Call("setProperty", "display", "none")
