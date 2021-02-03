@@ -21,11 +21,14 @@ package notes
 */
 
 import (
+	"encoding/json"
 	"fmt"
+
 	//lg "github.com/Ulbora/Level_Logger"
-	api "github.com/Ulbora/cocka2notesApi"
 	"strconv"
 	"syscall/js"
+
+	api "github.com/Ulbora/cocka2notesApi"
 )
 
 //UpdateTextNoteTitle UpdateTextNoteTitle
@@ -46,6 +49,10 @@ func (n *NoteHandler) UpdateTextNoteTitle(this js.Value, args []js.Value) interf
 		unote.Type = cbn.Type
 		res := n.API.UpdateNote(&unote)
 		fmt.Println("cb note update suc: ", res.Success)
+
+		nlst := n.API.GetNoteList()
+		JSON, _ := json.Marshal(nlst)
+		n.SaveToLocalStorage("noteList", JSON)
 
 		n.populateTextNote(noteID)
 
@@ -69,6 +76,7 @@ func (n *NoteHandler) UpdateTextNoteItem(this js.Value, args []js.Value) interfa
 	//title := document.Call("getElementById", "textTitle").Get("value").String()
 	fmt.Println("text", txt)
 	go func() {
+		n.API.FlushFailedCache()
 		//cbn := n.API.GetNote(noteID)
 		var item api.NoteItem
 		item.ID = id
@@ -76,6 +84,10 @@ func (n *NoteHandler) UpdateTextNoteItem(this js.Value, args []js.Value) interfa
 		item.Text = txt
 		res := n.API.UpdateNoteItem(&item)
 		fmt.Println("textnote item update suc: ", res.Success)
+
+		nlst := n.API.GetNoteList()
+		JSON, _ := json.Marshal(nlst)
+		n.SaveToLocalStorage("noteList", JSON)
 
 		n.populateTextNote(noteID)
 
@@ -96,11 +108,16 @@ func (n *NoteHandler) AddTextNoteItem(this js.Value, args []js.Value) interface{
 	txt := document.Call("getElementById", "newtxt").Get("value").String()
 	fmt.Println("txt", txt)
 	go func() {
+		n.API.FlushFailedCache()
 		var item api.NoteItem
 		item.NoteID = noteID
 		item.Text = txt
 		res := n.API.AddNoteItem(&item)
 		fmt.Println("cb update suc: ", res.Success)
+
+		nlst := n.API.GetNoteList()
+		JSON, _ := json.Marshal(nlst)
+		n.SaveToLocalStorage("noteList", JSON)
 
 		n.populateTextNote(noteID)
 
@@ -132,7 +149,7 @@ func (n *NoteHandler) DeleteTextNoteItem(this js.Value, args []js.Value) interfa
 }
 
 func (n *NoteHandler) populateTextNote(noteID int64) {
-
+	n.API.FlushFailedCache()
 	note := n.API.GetNote(noteID)
 	fmt.Println("textbox note", *note)
 	document := js.Global().Get("document")

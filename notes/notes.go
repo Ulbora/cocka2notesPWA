@@ -57,6 +57,8 @@ type Handler interface {
 
 	AddUsersToNote(this js.Value, args []js.Value) interface{}
 	AddNoteUser(this js.Value, args []js.Value) interface{}
+
+	SaveToLocalStorage(key string, val []byte)
 }
 
 //NoteHandler NoteHandler
@@ -79,6 +81,12 @@ func (n *NoteHandler) GetNew() Handler {
 	return n
 }
 
+//SaveToLocalStorage SaveToLocalStorage
+func (n *NoteHandler) SaveToLocalStorage(key string, val []byte) {
+	sloc := js.Global().Get("saveLocalStorage")
+	sloc.Invoke(key, string(val))
+}
+
 //GetNoteList GetNoteList
 func (n *NoteHandler) GetNoteList(this js.Value, args []js.Value) interface{} {
 	emailFn := js.Global().Get("getUserEmail")
@@ -90,11 +98,28 @@ func (n *NoteHandler) GetNoteList(this js.Value, args []js.Value) interface{} {
 //PopulateNoteList PopulateNoteList
 func (n *NoteHandler) PopulateNoteList(email string) {
 	go func() {
-		noteList := n.API.GetUsersNotes(email)
-		JSON, _ := json.Marshal(noteList)
-		sloc := js.Global().Get("saveLocalStorage")
-		sloc.Invoke("noteList", string(JSON))
-		fmt.Println("Note list in PopulateNoteList", *noteList)
+		noteList, suc := n.API.GetUsersNotes(email)
+		if suc {
+			JSON, _ := json.Marshal(noteList)
+			n.SaveToLocalStorage("noteList", JSON)
+			// sloc := js.Global().Get("saveLocalStorage")
+			// sloc.Invoke("noteList", string(JSON))
+			fmt.Println("Note list in PopulateNoteList", *noteList)
+			n.API.FlushFailedCache()
+		} else {
+			gloc := js.Global().Get("getLocalStorage")
+			nlst := gloc.Invoke("noteList")
+			fmt.Println("Note list in PopulateNoteList from ls", nlst)
+
+			var nlum []api.Note
+
+			json.Unmarshal([]byte(nlst.String()), &nlum)
+			fmt.Println("Unmarshaled Note list in PopulateNoteList from ls", nlum)
+			n.API.SetNoteList(nlum)
+			noteList = &nlum
+		}
+
+		//n.API.
 
 		document := js.Global().Get("document")
 		document.Call("getElementById", "noteList").Get("style").Call("setProperty", "display", "block")

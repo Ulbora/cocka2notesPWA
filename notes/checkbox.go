@@ -21,7 +21,9 @@ package notes
 */
 
 import (
+	"encoding/json"
 	"fmt"
+
 	//lg "github.com/Ulbora/Level_Logger"
 	"strconv"
 	"syscall/js"
@@ -46,6 +48,7 @@ func (n *NoteHandler) UpdateCheckboxNoteItem(this js.Value, args []js.Value) int
 	document := js.Global().Get("document")
 	txt := document.Call("getElementById", idStr).Get("value").String()
 	go func() {
+		n.API.FlushFailedCache()
 		var item api.CheckboxNoteItem
 		item.ID = id
 		item.NoteID = noteID
@@ -57,6 +60,9 @@ func (n *NoteHandler) UpdateCheckboxNoteItem(this js.Value, args []js.Value) int
 		}
 		res := n.API.UpdateCheckboxItem(&item)
 		fmt.Println("cb update suc: ", res.Success)
+		nlst := n.API.GetNoteList()
+		JSON, _ := json.Marshal(nlst)
+		n.SaveToLocalStorage("noteList", JSON)
 
 		n.pupulateCheckboxNote(noteID)
 
@@ -75,11 +81,15 @@ func (n *NoteHandler) AddCheckboxNoteItem(this js.Value, args []js.Value) interf
 	txt := document.Call("getElementById", "newtxt").Get("value").String()
 	fmt.Println("txt", txt)
 	go func() {
+		n.API.FlushFailedCache()
 		var item api.CheckboxNoteItem
 		item.NoteID = noteID
 		item.Text = txt
 		res := n.API.AddCheckboxItem(&item)
 		fmt.Println("cb update suc: ", res.Success)
+		nlst := n.API.GetNoteList()
+		JSON, _ := json.Marshal(nlst)
+		n.SaveToLocalStorage("noteList", JSON)
 
 		n.pupulateCheckboxNote(noteID)
 
@@ -133,6 +143,10 @@ func (n *NoteHandler) UpdateCheckboxNoteTitle(this js.Value, args []js.Value) in
 		res := n.API.UpdateNote(&unote)
 		fmt.Println("cb note update suc: ", res.Success)
 
+		nlst := n.API.GetNoteList()
+		JSON, _ := json.Marshal(nlst)
+		n.SaveToLocalStorage("noteList", JSON)
+
 		n.pupulateCheckboxNote(noteID)
 
 	}()
@@ -141,7 +155,7 @@ func (n *NoteHandler) UpdateCheckboxNoteTitle(this js.Value, args []js.Value) in
 }
 
 func (n *NoteHandler) pupulateCheckboxNote(noteID int64) {
-
+	n.API.FlushFailedCache()
 	note := n.API.GetCheckboxNote(noteID)
 	fmt.Println("checkbox note", *note)
 	document := js.Global().Get("document")
