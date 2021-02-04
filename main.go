@@ -91,6 +91,9 @@ func main() {
 	js.Global().Set("resetPwScreen", js.FuncOf(h.ResetPwScreen))
 	js.Global().Set("resetPassword", js.FuncOf(h.ResetPassword))
 
+	js.Global().Set("registerScreen", js.FuncOf(h.RegisterScreen))
+	js.Global().Set("register", js.FuncOf(h.Register))
+
 	// js.Global().Set("getNotes", MyGoFunc)
 
 	go func() {

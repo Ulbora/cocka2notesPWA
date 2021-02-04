@@ -40,6 +40,7 @@ func (n *NoteHandler) LoginScreen(this js.Value, args []js.Value) interface{} {
 	document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "changePwScreen").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "resetPwScreen").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "registerScreen").Get("style").Call("setProperty", "display", "none")
 	return js.Null()
 }
 
@@ -65,18 +66,19 @@ func (n *NoteHandler) Login(this js.Value, args []js.Value) interface{} {
 				document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
 				//go to note list
 				n.PopulateNoteList(email)
-			} else if res.Email == "" {
-				// auto create a new account
-				suc := n.API.AddUser(&u)
-				if suc.Success {
-					emailc := js.Global().Get("setUserEmail")
-					emailc.Invoke(email)
-					document := js.Global().Get("document")
-					document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
-					// gto to note list
-					n.PopulateNoteList(email)
-				}
 			}
+			// else if res.Email == "" {
+			// 	// auto create a new account
+			// 	suc := n.API.AddUser(&u)
+			// 	if suc.Success {
+			// 		emailc := js.Global().Get("setUserEmail")
+			// 		emailc.Invoke(email)
+			// 		document := js.Global().Get("document")
+			// 		document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
+			// 		// gto to note list
+			// 		n.PopulateNoteList(email)
+			// 	}
+			// }
 		}
 
 	}()
@@ -142,5 +144,71 @@ func (n *NoteHandler) ResetPassword(this js.Value, args []js.Value) interface{} 
 	document := js.Global().Get("document")
 	email := document.Call("getElementById", "rpwemail").Get("value").String()
 	fmt.Println("reseting password for: ", email)
+	return js.Null()
+}
+
+//RegisterScreen RegisterScreen
+func (n *NoteHandler) RegisterScreen(this js.Value, args []js.Value) interface{} {
+	document := js.Global().Get("document")
+	document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "regpwnotMatch").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "regUserExist").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "changePwScreen").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "registerScreen").Get("style").Call("setProperty", "display", "block")
+	emailFn := js.Global().Get("getUserEmail")
+	cemail := emailFn.Invoke()
+	document.Call("getElementById", "rpwemail").Set("value", cemail.String())
+	//document.Call("getElementById", "newPassword").Set("value", "")
+	//document.Call("getElementById", "newPassword2").Set("value", "")
+	//n.PopulateNoteList(cemail.String())
+	return js.Null()
+}
+
+//Register Register
+func (n *NoteHandler) Register(this js.Value, args []js.Value) interface{} {
+	go func() {
+		document := js.Global().Get("document")
+		document.Call("getElementById", "regpwnotMatch").Get("style").Call("setProperty", "display", "none")
+		email := document.Call("getElementById", "regemail").Get("value").String()
+		fmt.Println(email)
+		npw := document.Call("getElementById", "regpassword").Get("value").String()
+		npw2 := document.Call("getElementById", "regnewPassword2").Get("value").String()
+		if npw != "" && npw == npw2 {
+			if email != "" {
+				var u api.User
+				u.Email = email
+				u.Password = npw
+				lres := n.API.Login(&u)
+				fmt.Println("login suc: ", *lres)
+				if lres.Email == "" {
+					suc := n.API.AddUser(&u)
+					if suc.Success {
+						emailc := js.Global().Get("setUserEmail")
+						emailc.Invoke(email)
+						//n.Email = email
+						document := js.Global().Get("document")
+						document.Call("getElementById", "registerScreen").Get("style").Call("setProperty", "display", "none")
+						//go to note list
+						n.PopulateNoteList(email)
+					}
+				} else {
+					document.Call("getElementById", "regUserExist").Get("style").Call("setProperty", "display", "block")
+					// // auto create a new account
+					// suc := n.API.AddUser(&u)
+					// if suc.Success {
+					// 	emailc := js.Global().Get("setUserEmail")
+					// 	emailc.Invoke(email)
+					// 	document := js.Global().Get("document")
+					// 	document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
+					// 	// gto to note list
+					// 	n.PopulateNoteList(email)
+					// }
+				}
+			}
+		} else {
+			document.Call("getElementById", "regpwnotMatch").Get("style").Call("setProperty", "display", "block")
+		}
+	}()
+
 	return js.Null()
 }

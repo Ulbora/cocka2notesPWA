@@ -77,6 +77,7 @@ func (n *NoteHandler) AddNote(this js.Value, args []js.Value) interface{} {
 	document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "changePwScreen").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "resetPwScreen").Get("style").Call("setProperty", "display", "none")
+	document.Call("getElementById", "registerScreen").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "block")
 	fmt.Println("Add a note")
 	return js.Null()

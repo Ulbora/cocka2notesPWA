@@ -105,10 +105,12 @@ func (n *NoteHandler) AddTextNoteItem(this js.Value, args []js.Value) interface{
 	fmt.Println("noteId", noteID)
 	//var idInt = args[0].Int()
 	document := js.Global().Get("document")
-	txt := document.Call("getElementById", "newtxt").Get("value").String()
-	fmt.Println("txt", txt)
+	// txt := document.Call("getElementById", "newtxt").Get("value").String()
+	// fmt.Println("txt", txt)
 	go func() {
 		n.API.FlushFailedCache()
+		txt := document.Call("getElementById", "newtxt").Get("value").String()
+		fmt.Println("txt", txt)
 		var item api.NoteItem
 		item.NoteID = noteID
 		item.Text = txt

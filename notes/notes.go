@@ -38,6 +38,8 @@ type Handler interface {
 	ChangePassword(this js.Value, args []js.Value) interface{}
 	ResetPwScreen(this js.Value, args []js.Value) interface{}
 	ResetPassword(this js.Value, args []js.Value) interface{}
+	RegisterScreen(this js.Value, args []js.Value) interface{}
+	Register(this js.Value, args []js.Value) interface{}
 
 	GetNoteList(this js.Value, args []js.Value) interface{}
 	GetNote(this js.Value, args []js.Value) interface{}
@@ -133,6 +135,7 @@ func (n *NoteHandler) PopulateNoteList(email string) {
 		document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "none")
 		document.Call("getElementById", "changePwScreen").Get("style").Call("setProperty", "display", "none")
 		document.Call("getElementById", "resetPwScreen").Get("style").Call("setProperty", "display", "none")
+		document.Call("getElementById", "registerScreen").Get("style").Call("setProperty", "display", "none")
 		document.Call("getElementById", "newNoteTitle").Set("value", "")
 		var rowHTML = ""
 		for i, nt := range *noteList {
