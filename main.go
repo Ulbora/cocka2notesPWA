@@ -63,7 +63,7 @@ func main() {
 	h := nh.GetNew()
 
 	fmt.Println("nh.API", nh.API)
-	fmt.Println("Hello, WebAssembly, how you doing!")
+	//fmt.Println("Hello, WebAssembly, how you doing!")
 
 	js.Global().Set("getNotes", js.FuncOf(h.GetNoteList))
 	js.Global().Set("showNote", js.FuncOf(h.GetNote))
@@ -117,9 +117,9 @@ func main() {
 				fmt.Println("Decode Error:  ", error.Error())
 			}
 		}
-		fmt.Println("conf: ", conf)
+		//fmt.Println("conf: ", conf)
 		fmt.Println("url: ", conf.URL)
-		fmt.Println("api: ", conf.APIKey)
+		//fmt.Println("api: ", conf.APIKey)
 		if conf.APIKey != "" && conf.URL != "" {
 			napi.SetRestURL(conf.URL)
 			napi.SetAPIKey(conf.APIKey)

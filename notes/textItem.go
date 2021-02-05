@@ -72,10 +72,11 @@ func (n *NoteHandler) UpdateTextNoteItem(this js.Value, args []js.Value) interfa
 	var noteIDInt = args[1].Int()
 	var noteID = int64(noteIDInt)
 	document := js.Global().Get("document")
-	txt := document.Call("getElementById", idStr).Get("value").String()
-	//title := document.Call("getElementById", "textTitle").Get("value").String()
-	fmt.Println("text", txt)
+
 	go func() {
+		txt := document.Call("getElementById", idStr).Get("value").String()
+		//title := document.Call("getElementById", "textTitle").Get("value").String()
+		fmt.Println("text", txt)
 		n.API.FlushFailedCache()
 		//cbn := n.API.GetNote(noteID)
 		var item api.NoteItem
@@ -105,12 +106,14 @@ func (n *NoteHandler) AddTextNoteItem(this js.Value, args []js.Value) interface{
 	fmt.Println("noteId", noteID)
 	//var idInt = args[0].Int()
 	document := js.Global().Get("document")
-	// txt := document.Call("getElementById", "newtxt").Get("value").String()
-	// fmt.Println("txt", txt)
+	txt := document.Call("getElementById", "tnewtxt").Get("value").String()
+	fmt.Println("tnewtxt", txt)
 	go func() {
 		n.API.FlushFailedCache()
-		txt := document.Call("getElementById", "newtxt").Get("value").String()
-		fmt.Println("txt", txt)
+		// txt := document.Call("getElementById", "tnewtxt").Get("value").String()
+		// fmt.Println("txt", txt)
+		// txt = document.Call("getElementById", "tnewtxt").Get("value").String()
+		// fmt.Println("txt", txt)
 		var item api.NoteItem
 		item.NoteID = noteID
 		item.Text = txt
@@ -186,7 +189,7 @@ func (n *NoteHandler) populateTextNote(noteID int64) {
 	}
 	rowHTML = rowHTML + "<div class='form-group'>"
 	//rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
-	rowHTML = rowHTML + "<input id='newtxt' onchange='addTextItem(" + niddStr + ")' type='text' class='form-control' style='width: 80%; margin: 0 0 0 2%;' placeholder='Add another item'>"
+	rowHTML = rowHTML + "<input id='tnewtxt' onchange='addTextItem(" + niddStr + ")' type='text' class='form-control' style='width: 80%; margin: 0 0 0 2%;' placeholder='Add another item'>"
 	rowHTML = rowHTML + "</div>"
 
 	fmt.Println("rowHTML: ", rowHTML)
