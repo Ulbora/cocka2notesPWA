@@ -47,6 +47,7 @@ func (n *NoteHandler) GetNote(this js.Value, args []js.Value) interface{} {
 			document.Call("getElementById", "noteId").Set("value", idInt)
 
 			n.populateTextNote(id)
+			n.PollingNote = 0
 
 		} else if args[1].String() == "checkbox" {
 
@@ -56,6 +57,7 @@ func (n *NoteHandler) GetNote(this js.Value, args []js.Value) interface{} {
 			//document.Call("getElementById", "checkboxTitle").Set("value", note.Title)
 			document.Call("getElementById", "noteId").Set("value", idInt)
 
+			n.DoPolling = true
 			n.pupulateCheckboxNote(id)
 
 		}
@@ -80,6 +82,8 @@ func (n *NoteHandler) AddNote(this js.Value, args []js.Value) interface{} {
 	document.Call("getElementById", "registerScreen").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "addNoteForm").Get("style").Call("setProperty", "display", "block")
 	fmt.Println("Add a note")
+	n.DoPolling = false
+	n.PollingNote = 0
 	return js.Null()
 }
 
@@ -126,6 +130,8 @@ func (n *NoteHandler) DeleteNote(this js.Value, args []js.Value) interface{} {
 	fmt.Println("text note noteID", noteID)
 	emailFn := js.Global().Get("getUserEmail")
 	cemail := emailFn.Invoke()
+	n.DoPolling = false
+	n.PollingNote = 0
 	go func() {
 		res := n.API.DeleteNote(noteID, cemail.String())
 		if !res.Success {

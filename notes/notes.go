@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"syscall/js"
+	"time"
 
 	lg "github.com/Ulbora/Level_Logger"
 	api "github.com/Ulbora/cocka2notesApi"
@@ -49,8 +50,11 @@ type Handler interface {
 
 	UpdateCheckboxNoteTitle(this js.Value, args []js.Value) interface{}
 	UpdateCheckboxNoteItem(this js.Value, args []js.Value) interface{}
+	UpdateCheckboxNoteItemText(this js.Value, args []js.Value) interface{}
 	AddCheckboxNoteItem(this js.Value, args []js.Value) interface{}
 	DeleteCheckboxNoteItem(this js.Value, args []js.Value) interface{}
+	StopPolling(this js.Value, args []js.Value) interface{}
+	StartPollingTimer()
 
 	UpdateTextNoteTitle(this js.Value, args []js.Value) interface{}
 	UpdateTextNoteItem(this js.Value, args []js.Value) interface{}
@@ -68,6 +72,8 @@ type NoteHandler struct {
 	API api.API
 	Log *lg.Logger
 	//Email string
+	DoPolling   bool
+	PollingNote int64
 }
 
 func (n *NoteHandler) updateLocalCheckboxNoteItem(ntci *api.CheckboxNoteItem) {
@@ -89,6 +95,26 @@ func (n *NoteHandler) SaveToLocalStorage(key string, val []byte) {
 	sloc.Invoke(key, string(val))
 }
 
+//StopPolling StopPolling
+func (n *NoteHandler) StopPolling(this js.Value, args []js.Value) interface{} {
+	fmt.Println("polling stopped")
+	n.DoPolling = false
+	n.StartPollingTimer()
+	return js.Null()
+}
+
+//StartPollingTimer StartPollingTimer
+func (n *NoteHandler) StartPollingTimer() {
+	go func() {
+		timer1 := time.NewTimer(60 * time.Second)
+		<-timer1.C
+		if n.PollingNote != 0 && !n.DoPolling {
+			n.DoPolling = true
+			n.pupulateCheckboxNote(n.PollingNote)
+		}
+	}()
+}
+
 //GetNoteList GetNoteList
 func (n *NoteHandler) GetNoteList(this js.Value, args []js.Value) interface{} {
 	emailFn := js.Global().Get("getUserEmail")
@@ -99,6 +125,8 @@ func (n *NoteHandler) GetNoteList(this js.Value, args []js.Value) interface{} {
 
 //PopulateNoteList PopulateNoteList
 func (n *NoteHandler) PopulateNoteList(email string) {
+	n.DoPolling = false
+	n.PollingNote = 0
 	go func() {
 		noteList, suc := n.API.GetUsersNotes(email)
 		if suc {

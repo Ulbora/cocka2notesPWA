@@ -22,10 +22,11 @@ package notes
 
 import (
 	"fmt"
-	api "github.com/Ulbora/cocka2notesApi"
 	"regexp"
 	"strconv"
 	"syscall/js"
+
+	api "github.com/Ulbora/cocka2notesApi"
 )
 
 var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
@@ -39,6 +40,8 @@ func (n *NoteHandler) AddUsersToNote(this js.Value, args []js.Value) interface{}
 	fmt.Println(" noteID", noteID)
 	document.Call("getElementById", "userworning").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "newemail").Set("value", "")
+	n.DoPolling = false
+	n.PollingNote = 0
 	go func() {
 		note := n.API.GetCheckboxNote(noteID)
 		users := n.API.GetNoteUserList(noteID, note.OwnerEmail)

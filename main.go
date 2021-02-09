@@ -73,8 +73,10 @@ func main() {
 
 	js.Global().Set("updateCheckTitle", js.FuncOf(h.UpdateCheckboxNoteTitle))
 	js.Global().Set("updateCheckItem", js.FuncOf(h.UpdateCheckboxNoteItem))
+	js.Global().Set("updateCheckItemText", js.FuncOf(h.UpdateCheckboxNoteItemText))
 	js.Global().Set("addCheckItem", js.FuncOf(h.AddCheckboxNoteItem))
 	js.Global().Set("deleteCheckItem", js.FuncOf(h.DeleteCheckboxNoteItem))
+	js.Global().Set("stopPolling", js.FuncOf(h.StopPolling))
 
 	js.Global().Set("updateTextTitle", js.FuncOf(h.UpdateTextNoteTitle))
 	js.Global().Set("updateTextItem", js.FuncOf(h.UpdateTextNoteItem))

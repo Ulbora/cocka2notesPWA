@@ -41,6 +41,8 @@ func (n *NoteHandler) LoginScreen(this js.Value, args []js.Value) interface{} {
 	document.Call("getElementById", "changePwScreen").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "resetPwScreen").Get("style").Call("setProperty", "display", "none")
 	document.Call("getElementById", "registerScreen").Get("style").Call("setProperty", "display", "none")
+	n.DoPolling = false
+	n.PollingNote = 0
 	return js.Null()
 }
 
