@@ -91,6 +91,7 @@ func (n *NoteHandler) GetNew() Handler {
 
 //SaveToLocalStorage SaveToLocalStorage
 func (n *NoteHandler) SaveToLocalStorage(key string, val []byte) {
+	fmt.Println("refreshing cache: ", string(val))
 	sloc := js.Global().Get("saveLocalStorage")
 	sloc.Invoke(key, string(val))
 }

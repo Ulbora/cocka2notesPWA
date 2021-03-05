@@ -62,6 +62,7 @@ func (n *NoteHandler) UpdateCheckboxNoteItem(this js.Value, args []js.Value) int
 		}
 		res := n.API.UpdateCheckboxItem(&item)
 		fmt.Println("cb update suc: ", res.Success)
+		n.populateNoteList()
 		nlst := n.API.GetNoteList()
 		JSON, _ := json.Marshal(nlst)
 		n.SaveToLocalStorage("noteList", JSON)
@@ -103,6 +104,7 @@ func (n *NoteHandler) UpdateCheckboxNoteItemText(this js.Value, args []js.Value)
 		// }
 		res := n.API.UpdateCheckboxItem(&item)
 		fmt.Println("cb update suc: ", res.Success)
+		n.populateNoteList()
 		nlst := n.API.GetNoteList()
 		JSON, _ := json.Marshal(nlst)
 		n.SaveToLocalStorage("noteList", JSON)
@@ -132,6 +134,7 @@ func (n *NoteHandler) AddCheckboxNoteItem(this js.Value, args []js.Value) interf
 		item.Text = txt
 		res := n.API.AddCheckboxItem(&item)
 		fmt.Println("cb update suc: ", res.Success)
+		n.populateNoteList()
 		nlst := n.API.GetNoteList()
 		JSON, _ := json.Marshal(nlst)
 		n.SaveToLocalStorage("noteList", JSON)
@@ -336,4 +339,15 @@ func (n *NoteHandler) pupulateCheckboxNote(noteID int64) {
 		}
 	}
 	//ticker.Stop()
+}
+
+func (n *NoteHandler) populateNoteList() {
+	emailFn := js.Global().Get("getUserEmail")
+	cemail := emailFn.Invoke()
+	n.API.GetUsersNotes(cemail.String())
+	// noteList, suc := n.API.GetUsersNotes(cemail.String())
+
+	// if suc {
+	// 	n.API.SetNoteList(*noteList)
+	// }
 }
