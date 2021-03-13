@@ -67,7 +67,7 @@ func (n *NoteHandler) UpdateCheckboxNoteItem(this js.Value, args []js.Value) int
 		JSON, _ := json.Marshal(nlst)
 		n.SaveToLocalStorage("noteList", JSON)
 
-		n.pupulateCheckboxNote(noteID)
+		n.PopulateCheckboxNote(noteID)
 
 	}()
 
@@ -109,7 +109,7 @@ func (n *NoteHandler) UpdateCheckboxNoteItemText(this js.Value, args []js.Value)
 		JSON, _ := json.Marshal(nlst)
 		n.SaveToLocalStorage("noteList", JSON)
 
-		n.pupulateCheckboxNote(noteID)
+		n.PopulateCheckboxNote(noteID)
 
 	}()
 
@@ -139,7 +139,7 @@ func (n *NoteHandler) AddCheckboxNoteItem(this js.Value, args []js.Value) interf
 		JSON, _ := json.Marshal(nlst)
 		n.SaveToLocalStorage("noteList", JSON)
 
-		n.pupulateCheckboxNote(noteID)
+		n.PopulateCheckboxNote(noteID)
 
 	}()
 
@@ -166,7 +166,7 @@ func (n *NoteHandler) DeleteCheckboxNoteItem(this js.Value, args []js.Value) int
 		res := n.API.DeleteCheckboxItem(id)
 		fmt.Println("cb delete suc: ", res.Success)
 
-		n.pupulateCheckboxNote(noteID)
+		n.PopulateCheckboxNote(noteID)
 
 	}()
 
@@ -198,14 +198,14 @@ func (n *NoteHandler) UpdateCheckboxNoteTitle(this js.Value, args []js.Value) in
 		JSON, _ := json.Marshal(nlst)
 		n.SaveToLocalStorage("noteList", JSON)
 
-		n.pupulateCheckboxNote(noteID)
+		n.PopulateCheckboxNote(noteID)
 
 	}()
 
 	return js.Null()
 }
 
-func (n *NoteHandler) pupulateCheckboxNote(noteID int64) {
+func (n *NoteHandler) PopulateCheckboxNote(noteID int64) {
 	n.API.FlushFailedCache()
 	n.PollingNote = noteID
 	//ticker := time.NewTicker(10 * time.Second)
@@ -221,32 +221,7 @@ func (n *NoteHandler) pupulateCheckboxNote(noteID int64) {
 		document.Call("getElementById", "checkboxTitle").Set("value", note.Title)
 		var rowHTML = ""
 		var niddStr = strconv.FormatInt(noteID, 10)
-		// for _, nt := range note.NoteItems {
-		// 	fmt.Println("checkbox", nt)
-		// 	var idStr = strconv.FormatInt(nt.ID, 10)
-		// 	var nidStr = strconv.FormatInt(nt.NoteID, 10)
-		// 	var ched = ""
-
-		// 	if nt.Checked {
-		// 		ched = "checked"
-		// 	}
-		// 	// rowHTML = rowHTML + "<div class='form-group form-check'>"
-		// 	// rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
-		// 	// rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-		// 	// rowHTML = rowHTML + "</div>"
-		// 	rowHTML = rowHTML + "<div class='form-row'>"
-		// 	rowHTML = rowHTML + "<div class='form-group form-row-l'>"
-		// 	rowHTML = rowHTML + "<div class='form-check'>"
-		// 	rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
-		// 	rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-		// 	rowHTML = rowHTML + "</div>"
-		// 	rowHTML = rowHTML + "</div>"
-		// 	rowHTML = rowHTML + "<div class='form-group form-row-r'>"
-		// 	rowHTML = rowHTML + "<button onclick='deleteCheckItem(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
-		// 	rowHTML = rowHTML + "</div>"
-		// 	rowHTML = rowHTML + "</div>"
-
-		// }
+		
 		for _, nt := range note.NoteItems {
 			fmt.Println("checkbox", nt)
 			var idStr = strconv.FormatInt(nt.ID, 10)
@@ -257,10 +232,7 @@ func (n *NoteHandler) pupulateCheckboxNote(noteID int64) {
 				ched = "checked"
 				continue
 			}
-			// rowHTML = rowHTML + "<div class='form-group form-check'>"
-			// rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
-			// rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-			// rowHTML = rowHTML + "</div>"
+			
 			rowHTML = rowHTML + "<div class='form-row'>"
 			rowHTML = rowHTML + "<div class='form-group form-row-l'>"
 			rowHTML = rowHTML + "<div class='form-check'>"
@@ -269,7 +241,7 @@ func (n *NoteHandler) pupulateCheckboxNote(noteID int64) {
 			rowHTML = rowHTML + "</div>"
 			rowHTML = rowHTML + "</div>"
 			rowHTML = rowHTML + "<div class='form-group form-row-r'>"
-			rowHTML = rowHTML + "<button onclick='deleteCheckItem(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
+			rowHTML = rowHTML + "<button onclick='deleteCheckItemConfirm(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
 			rowHTML = rowHTML + "</div>"
 			rowHTML = rowHTML + "</div>"
 
@@ -294,28 +266,22 @@ func (n *NoteHandler) pupulateCheckboxNote(noteID int64) {
 			} else {
 				ched = "checked"
 			}
-			// rowHTML = rowHTML + "<div class='form-group form-check'>"
-			// rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
-			// rowHTML = rowHTML + "<input id='" + idStr + "' onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-			// rowHTML = rowHTML + "</div>"
+			
 			rowHTML = rowHTML + "<div class='form-row'>"
 			rowHTML = rowHTML + "<div class='form-group form-row-l'>"
 			rowHTML = rowHTML + "<div class='form-check'>"
 			rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
 			rowHTML = rowHTML + "<input disabled id='" + idStr + "' onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-			// rowHTML = rowHTML + "<del> nt.Text </del>"
+			
 			rowHTML = rowHTML + "</div>"
 			rowHTML = rowHTML + "</div>"
 			rowHTML = rowHTML + "<div class='form-group form-row-r'>"
-			rowHTML = rowHTML + "<button onclick='deleteCheckItem(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
+			rowHTML = rowHTML + "<button onclick='deleteCheckItemConfirm(" + idStr + "," + nidStr + ")' type='button' class='btn btn-danger delete-btn'>X</button>"
 			rowHTML = rowHTML + "</div>"
 			rowHTML = rowHTML + "</div>"
 
 		}
-		// rowHTML = rowHTML + "<div class='form-group form-check'>"
-		// //rowHTML = rowHTML + "<input type='checkbox' class='form-check-input'>"
-		// rowHTML = rowHTML + "<input id='newtxt' onchange='addCheckItem(" + niddStr + ")' type='text' class='form-control' style='width: 80%; margin: 0 0 0 2%;' placeholder='Add another item'>"
-		// rowHTML = rowHTML + "</div>"
+		
 		fmt.Println("rowHTML: ", rowHTML)
 		document.Call("getElementById", "checkboxes").Set("innerHTML", rowHTML)
 
@@ -323,13 +289,13 @@ func (n *NoteHandler) pupulateCheckboxNote(noteID int64) {
 			break
 		}
 
-		time.Sleep(2 * time.Second)
+		time.Sleep(10 * time.Second)
 
 		if !n.DoPolling {
 			break
 		}
 
-		stopper += 2
+		stopper += 10
 		if stopper >= stopTime {
 			n.DoPolling = false
 			n.PollingNote = 0
@@ -345,9 +311,5 @@ func (n *NoteHandler) populateNoteList() {
 	emailFn := js.Global().Get("getUserEmail")
 	cemail := emailFn.Invoke()
 	n.API.GetUsersNotes(cemail.String())
-	// noteList, suc := n.API.GetUsersNotes(cemail.String())
-
-	// if suc {
-	// 	n.API.SetNoteList(*noteList)
-	// }
+	
 }

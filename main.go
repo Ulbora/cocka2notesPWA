@@ -8,7 +8,7 @@ import (
 	lg "github.com/Ulbora/Level_Logger"
 	api "github.com/Ulbora/cocka2notesApi"
 	ns "github.com/Ulbora/cocka2notesWA/notes"
-
+	"strconv"
 	//"os"
 	"sync"
 	"syscall/js"
@@ -138,7 +138,28 @@ func main() {
 			document.Call("getElementById", "loginScreen").Get("style").Call("setProperty", "display", "block")
 		} else {
 			//nh.Email = cemail.String()
-			nh.PopulateNoteList(cemail.String())
+			gloc := js.Global().Get("getLocalStorage")
+			ntypeJs:= gloc.Invoke("noteType")
+			ntype := ntypeJs.String()
+			nIdJs:= gloc.Invoke("noteID")
+			nIdStr := nIdJs.String()
+			nid,_ := strconv.ParseInt(nIdStr, 10, 64)
+			if ntype != "" && nid > 0{
+				gloc := js.Global().Get("getLocalStorage")
+				nlst := gloc.Invoke("noteList")
+				fmt.Println("Note list in PopulateNoteList from ls", nlst)
+
+				var nlum []api.Note
+
+				json.Unmarshal([]byte(nlst.String()), &nlum)
+				fmt.Println("Unmarshaled Note list in PopulateNoteList from ls", nlum)
+				nh.API.SetNoteList(nlum)
+				shn := js.Global().Get("getNoteTrans")
+				shn.Invoke(nid, ntype)
+				
+			}else{
+				nh.PopulateNoteList(cemail.String())
+			}			
 		}
 		//else  go go note list
 	}()

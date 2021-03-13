@@ -46,8 +46,13 @@ func (n *NoteHandler) GetNote(this js.Value, args []js.Value) interface{} {
 			//document.Call("getElementById", "textTitle").Set("value", note.Title)
 			document.Call("getElementById", "noteId").Set("value", idInt)
 
-			n.populateTextNote(id)
+			n.SaveToLocalStorage("noteType", []byte("note"))
+			n.SaveToLocalStorage("noteID", []byte(strconv.FormatInt(id, 10)))
+
+			n.PopulateTextNote(id)
 			n.PollingNote = 0
+
+			
 
 		} else if args[1].String() == "checkbox" {
 
@@ -58,7 +63,12 @@ func (n *NoteHandler) GetNote(this js.Value, args []js.Value) interface{} {
 			document.Call("getElementById", "noteId").Set("value", idInt)
 
 			n.DoPolling = true
-			n.pupulateCheckboxNote(id)
+			n.SaveToLocalStorage("noteType", []byte("checkbox"))
+			n.SaveToLocalStorage("noteID", []byte(strconv.FormatInt(id, 10)))
+
+			n.PopulateCheckboxNote(id)
+
+			
 
 		}
 

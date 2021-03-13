@@ -54,7 +54,7 @@ func (n *NoteHandler) UpdateTextNoteTitle(this js.Value, args []js.Value) interf
 		JSON, _ := json.Marshal(nlst)
 		n.SaveToLocalStorage("noteList", JSON)
 
-		n.populateTextNote(noteID)
+		n.PopulateTextNote(noteID)
 
 	}()
 
@@ -90,7 +90,7 @@ func (n *NoteHandler) UpdateTextNoteItem(this js.Value, args []js.Value) interfa
 		JSON, _ := json.Marshal(nlst)
 		n.SaveToLocalStorage("noteList", JSON)
 
-		n.populateTextNote(noteID)
+		n.PopulateTextNote(noteID)
 
 	}()
 
@@ -124,7 +124,7 @@ func (n *NoteHandler) AddTextNoteItem(this js.Value, args []js.Value) interface{
 		JSON, _ := json.Marshal(nlst)
 		n.SaveToLocalStorage("noteList", JSON)
 
-		n.populateTextNote(noteID)
+		n.PopulateTextNote(noteID)
 
 	}()
 	return js.Null()
@@ -146,14 +146,14 @@ func (n *NoteHandler) DeleteTextNoteItem(this js.Value, args []js.Value) interfa
 	go func() {
 		res := n.API.DeleteNoteItem(id)
 		fmt.Println("cb delete suc: ", res.Success)
-		n.populateTextNote(noteID)
+		n.PopulateTextNote(noteID)
 
 	}()
 
 	return js.Null()
 }
 
-func (n *NoteHandler) populateTextNote(noteID int64) {
+func (n *NoteHandler) PopulateTextNote(noteID int64) {
 	n.API.FlushFailedCache()
 	note := n.API.GetNote(noteID)
 	fmt.Println("textbox note", *note)

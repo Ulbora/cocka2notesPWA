@@ -36,7 +36,15 @@ var deleteNoteConfirm = function () {
     if (r == true) {
         // txt = "You pressed OK!";
         deleteNote();
-    } 
+    }
+}
+
+var deleteCheckItemConfirm = function (id, nid) {
+    var r = confirm("Delete this Check Item!");
+    if (r == true) {
+        // txt = "You pressed OK!";
+        deleteCheckItem(id, nid);
+    }
 }
 
 
@@ -45,13 +53,18 @@ var resetPasswordConfirm = function () {
     if (r == true) {
         // txt = "You pressed OK!";
         resetPassword();
-    } 
+    }
 }
 
-var saveLocalStorage = function(key, jsonVal){
+var saveLocalStorage = function (key, jsonVal) {
     localStorage.setItem(key, jsonVal);
 }
 
-var getLocalStorage = function(key){
-    return  localStorage.getItem(key);
+var getLocalStorage = function (key) {
+    return localStorage.getItem(key);
+}
+
+var getNoteTrans = function (noteId, noteType) {
+    console.log("calling getNoteTrans");
+    showNote(noteId, noteType);
 }

@@ -111,7 +111,7 @@ func (n *NoteHandler) StartPollingTimer() {
 		<-timer1.C
 		if n.PollingNote != 0 && !n.DoPolling {
 			n.DoPolling = true
-			n.pupulateCheckboxNote(n.PollingNote)
+			n.PopulateCheckboxNote(n.PollingNote)
 		}
 	}()
 }
