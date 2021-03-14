@@ -221,7 +221,7 @@ func (n *NoteHandler) PopulateCheckboxNote(noteID int64) {
 		document.Call("getElementById", "checkboxTitle").Set("value", note.Title)
 		var rowHTML = ""
 		var niddStr = strconv.FormatInt(noteID, 10)
-		
+
 		for _, nt := range note.NoteItems {
 			fmt.Println("checkbox", nt)
 			var idStr = strconv.FormatInt(nt.ID, 10)
@@ -232,7 +232,7 @@ func (n *NoteHandler) PopulateCheckboxNote(noteID int64) {
 				ched = "checked"
 				continue
 			}
-			
+
 			rowHTML = rowHTML + "<div class='form-row'>"
 			rowHTML = rowHTML + "<div class='form-group form-row-l'>"
 			rowHTML = rowHTML + "<div class='form-check'>"
@@ -266,13 +266,13 @@ func (n *NoteHandler) PopulateCheckboxNote(noteID int64) {
 			} else {
 				ched = "checked"
 			}
-			
+
 			rowHTML = rowHTML + "<div class='form-row'>"
 			rowHTML = rowHTML + "<div class='form-group form-row-l'>"
 			rowHTML = rowHTML + "<div class='form-check'>"
 			rowHTML = rowHTML + "<input onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='checkbox' class='form-check-input' " + ched + ">"
 			rowHTML = rowHTML + "<input disabled id='" + idStr + "' onchange='updateCheckItem(" + idStr + "," + nidStr + "," + "\"" + ched + "\"," + "\"" + nt.Text + "\"" + ")' type='text' class='form-control' value=\"" + nt.Text + "\"" + ">"
-			
+
 			rowHTML = rowHTML + "</div>"
 			rowHTML = rowHTML + "</div>"
 			rowHTML = rowHTML + "<div class='form-group form-row-r'>"
@@ -281,7 +281,7 @@ func (n *NoteHandler) PopulateCheckboxNote(noteID int64) {
 			rowHTML = rowHTML + "</div>"
 
 		}
-		
+
 		fmt.Println("rowHTML: ", rowHTML)
 		document.Call("getElementById", "checkboxes").Set("innerHTML", rowHTML)
 
@@ -311,5 +311,5 @@ func (n *NoteHandler) populateNoteList() {
 	emailFn := js.Global().Get("getUserEmail")
 	cemail := emailFn.Invoke()
 	n.API.GetUsersNotes(cemail.String())
-	
+
 }

@@ -107,7 +107,7 @@ func (n *NoteHandler) StopPolling(this js.Value, args []js.Value) interface{} {
 //StartPollingTimer StartPollingTimer
 func (n *NoteHandler) StartPollingTimer() {
 	go func() {
-		timer1 := time.NewTimer(60 * time.Second)
+		timer1 := time.NewTimer(120 * time.Second)
 		<-timer1.C
 		if n.PollingNote != 0 && !n.DoPolling {
 			n.DoPolling = true
